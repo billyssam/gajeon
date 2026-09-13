@@ -14,6 +14,11 @@ const SITE = "가전 고르는 기준";
 const TAGLINE = "사기 전에 무엇을 봐야 하는지부터 정리합니다";
 const SITE_URL = process.env.SITE_URL || "https://billyssam.github.io/gajeon";
 
+const TODAY = new Date().toISOString().slice(0, 10);
+// 🔴 첫 발행일은 한 번 정해지면 안 바뀐다. 없던 주소만 오늘로 찍고 파일에 남긴다.
+const PUBFILE = path.join(DATA, "published.json");
+const PUBDATE = fs.existsSync(PUBFILE) ? JSON.parse(fs.readFileSync(PUBFILE, "utf-8")) : {};
+
 export const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
 export const n = x => (x==null||isNaN(x)) ? "—" : Number(x).toLocaleString("ko-KR");
 
@@ -62,6 +67,12 @@ li{margin-bottom:var(--s2)}
   border-radius:6px;padding:var(--s2) var(--s3);margin:0 0 var(--s4)}
 .cpnote{font-size:12px;color:var(--ink3);margin:var(--s2) 0 0;line-height:1.6;
   position:sticky;left:0}
+/* 전환 다리 — 기준을 다 읽은 사람이 목록으로 가는 자리. 승인 전에는 아예 안 그려진다. */
+.shop{border:1px solid var(--line);border-radius:8px;padding:var(--s3);margin:var(--s4) 0 0}
+.shop b{display:block;font-size:14px;margin-bottom:var(--s2)}
+.shop a{display:inline-block;margin:0 var(--s2) var(--s2) 0;padding:6px var(--s3);
+  border:1px solid var(--line);border-radius:999px;font-size:14px}
+.shop p{margin:var(--s1) 0 0;font-size:12px;color:var(--ink3)}
 .rel{background:var(--band);border-radius:8px;padding:var(--s3);margin-top:var(--s5)}
 .rel b{display:block;font-size:14px;margin-bottom:var(--s2)}
 .rel a{display:block;padding:var(--s1) 0;font-size:15px}
@@ -98,24 +109,58 @@ const COUPANG = `<div class="cp"><script src="https://ads-partners.coupang.com/g
 const ADS_CLIENT = "ca-pub-8092073462948926";
 const ADS = `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADS_CLIENT}" crossorigin="anonymous"></script>`;
 
-export function page({ title, desc, body, up = "", ad = false }) {
+// 🔴 2026-09-13 실측: 발행된 24쪽 전부 doctype 이 없어 브라우저가 **쿼크 모드**로 그렸다
+//    (document.compatMode === "BackCompat"). 박스 모델과 상속 규칙이 달라져 조판이 조용히 틀어진다.
+//    lang·canonical·og 도 없었다 — 한국어인지, 정본 주소가 뭔지 검색엔진이 알 길이 없었다.
+// 🔴 FAQPage 구조화 데이터는 넣지 않는다. 구글이 2026-06 에 FAQ 리치결과를 없앴다(문서에서 삭제).
+//    안 나오는 걸 넣고 "리치결과 준비" 라고 적으면 그건 거짓말이다.
+//    지금도 검색 결과에 실제로 나오는 것은 BreadcrumbList 다 — 그것과 Article 만 넣는다.
+export function page({ title, desc, body, up = "", ad = false, path = "", crumb = "" }) {
+  const url = `${SITE_URL}/${path}`;
+  const first = PUBDATE[path] || TODAY;
+  const ld = [
+    { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement:
+      [{ "@type": "ListItem", position: 1, name: SITE, item: `${SITE_URL}/` }]
+        .concat(crumb ? [{ "@type": "ListItem", position: 2, name: crumb, item: url }] : []) },
+  ];
+  if (crumb) ld.push({ "@context": "https://schema.org", "@type": "Article",
+    headline: title, description: desc, inLanguage: "ko-KR",
+    datePublished: first, dateModified: TODAY, mainEntityOfPage: url,
+    author: { "@type": "Organization", name: SITE }, publisher: { "@type": "Organization", name: SITE } });
+
   // 규정 A1 — 제휴가 붙는 글은 첫 부분에 고지가 있어야 한다. 여기 한 자리에서 꽂는다.
   if (ad) {
     const i = body.indexOf("</h1>");
     if (i < 0) throw new Error("h1 이 없어 고지를 첫 부분에 넣을 수 없다 — 규정 A1");
     body = body.slice(0, i + 5) + `\n<p class="cpnote top">${CP_NOTE}</p>` + body.slice(i + 5);
   }
-  return `<meta name="description" content="${esc(desc)}">
+  return `<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="description" content="${esc(desc)}">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="canonical" href="${esc(url)}">
 <title>${esc(title)}</title>
+<meta property="og:type" content="${crumb ? "article" : "website"}">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(desc)}">
+<meta property="og:url" content="${esc(url)}">
+<meta property="og:site_name" content="${esc(SITE)}">
+<meta property="og:locale" content="ko_KR">
+<script type="application/ld+json">${JSON.stringify(ld)}</script>
 ${ADS}
 <style>${CSS}</style>
+</head>
+<body>
 <header><div class="wrap"><b><a href="${up || "./"}">${SITE}</a></b><span>${TAGLINE}</span></div></header>
 <main><div class="wrap">${body}${ad ? COUPANG : ""}</div></main>
 <footer><div class="wrap">
 <nav class="fnav"><a href="${up || "./"}">홈</a><a href="${up}about/">소개</a><a href="${up}contact/">문의</a><a href="${up}privacy/">개인정보처리방침</a></nav>
 <p>${SITE} · 이 글은 제품을 직접 써 보고 쓴 후기가 아니라, 고르는 기준을 정리한 글입니다.</p>
-</div></footer>`;
+</div></footer>
+</body>
+</html>`;
 }
 
 fs.rmSync(OUT, { recursive: true, force: true });
@@ -140,7 +185,8 @@ for (const g of groups) {
   const dir = path.join(OUT, slugify(g.seed));
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, "index.html"),
-    page({ title: post.title, desc: post.desc, body: post.body, up: "../", ad: true }));
+    page({ title: post.title, desc: post.desc, body: post.body, up: "../", ad: true,
+           path: encodeURI(slugify(g.seed)) + "/", crumb: g.seed }));
   posts.push({ ...post, slug: slugify(g.seed), seed: g.seed });
 }
 
@@ -162,12 +208,18 @@ for (const pg of PAGES) {
   const dir = path.join(OUT, pg.slug);
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, "index.html"),
-    page({ title: `${pg.title} — ${SITE}`, desc: pg.desc, body: pg.body, up: "../" }));
+    page({ title: `${pg.title} — ${SITE}`, desc: pg.desc, body: pg.body, up: "../",
+           path: pg.slug + "/", crumb: pg.title }));
 }
 console.log(`필수 페이지 ${PAGES.length}쪽`);
 
+// 첫 발행일을 남긴다(없던 주소만 오늘로). 🔴 기존 값은 절대 덮지 않는다.
+for (const u of ["", ...PAGES.map(pg => pg.slug + "/"), ...posts.map(p => encodeURI(p.slug) + "/")])
+  if (!PUBDATE[u]) PUBDATE[u] = TODAY;
+fs.writeFileSync(PUBFILE, JSON.stringify(PUBDATE, null, 1) + "\n");
+
 // 사이트맵 · robots — 크롤러가 이 사이트를 아는 유일한 길
-const today = new Date().toISOString().slice(0, 10);
+const today = TODAY;
 const urls = ["", ...PAGES.map(pg => pg.slug + "/"), ...posts.map(p => encodeURI(p.slug) + "/")]
   .map(u => `  <url><loc>${SITE_URL}/${u}</loc><lastmod>${today}</lastmod></url>`).join("\n");
 fs.writeFileSync(path.join(OUT, "sitemap.xml"),

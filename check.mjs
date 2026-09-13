@@ -5,6 +5,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { RULES, 각인 } from "./rules.mjs";
+import { ready as shopReady } from "./shop.mjs";
 
 각인("배포 전 검사");
 
@@ -67,6 +68,17 @@ const R = (id, ok, msg) => done.set(id, { ok, msg });
 {
   const bad = posts.filter(d => /\d{1,3}(,\d{3})+\s*원|\d+\s*만\s*원|₩\s*\d|\d+\s*위\b/.test(strip(html(d))));
   R("A6", bad.length === 0, `가격·순위 표기 없음(걸린 곳: ${list(bad)})`);
+}
+
+// A7 승인 전에는 제휴 링크를 내보내지 않는다. 🔴 승인이 나면 반대로 전 편에 다리가 있어야 한다 —
+//    스위치를 켰는데 조용히 아무 데도 안 붙는 상태를 "통과" 로 두지 않는다.
+{
+  const 다리 = posts.filter(d => /class="shop"/.test(html(d)));
+  const 링크샘 = posts.filter(d => /link\.coupang\.com/.test(html(d)));
+  if (shopReady()) R("A7", 다리.length === posts.length,
+    `승인됨 — 전 편에 전환 다리(빠진 곳: ${list(posts.filter(d => !/class="shop"/.test(html(d))))})`);
+  else R("A7", 다리.length === 0 && 링크샘.length === 0,
+    `승인 전 — 제휴 링크 0개(샌 곳: ${list([...new Set([...다리, ...링크샘])])})`);
 }
 
 // ── B. 구글 애드센스 ─────────────────────────────────────────────
@@ -188,6 +200,22 @@ R("B1", MUST.every(m => dirs.includes(m)), `필수 페이지 ${MUST.join("·")}(
 {
   const w = fs.existsSync("watch.mjs") ? fs.readFileSync("watch.mjs", "utf-8") : "";
   R("E6", /MUST_REMOTE/.test(w) && /process\.exit\(1\)/.test(w), "워커에 저장소 가드 있음");
+}
+
+// E7 머리말. 🔴 doctype 이 없으면 브라우저가 쿼크 모드로 그린다 — 조판이 조용히 틀어진다.
+{
+  const bad = [];
+  for (const d of [...dirs, "(홈)"]) {
+    const h = d === "(홈)" ? home : html(d);
+    const miss = [];
+    if (!/^<!doctype html>/i.test(h.trim())) miss.push("doctype");
+    if (!/<html lang="ko">/.test(h)) miss.push("lang");
+    if (!/<link rel="canonical" href="https?:\/\/[^"]+">/.test(h)) miss.push("canonical");
+    if (!/application\/ld\+json/.test(h)) miss.push("구조화");
+    if (!/<meta property="og:title"/.test(h)) miss.push("og");
+    if (miss.length) bad.push(`${d}(${miss.join("·")})`);
+  }
+  R("E7", bad.length === 0, `머리말 전수(빠진 곳: ${list(bad)})`);
 }
 
 // ── 규정과 검사가 어긋나지 않는지 ────────────────────────────────

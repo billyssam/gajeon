@@ -1,5 +1,6 @@
 import { SPECS, GENERIC } from "./specs.mjs";
 import { DETAIL, FIT } from "./detail.mjs";
+import { bridge } from "./shop.mjs";
 
 // 키워드를 사람이 묻는 문장으로 바꾼다. 🔴 억지로 만들지 않는다 —
 //    질문으로 읽히지 않는 키워드는 버린다(빈 FAQ가 깨진 FAQ보다 낫다).
@@ -155,6 +156,7 @@ ${det.wrong.map(w => `<li>${esc(w)}</li>`).join("\n")}
 <p>${esc(은는S(seed))} <b>${esc(spec.axes[0][0])}</b>에서 만족도가 가장 크게 갈립니다.
 예산이 빠듯하다면 여기에 먼저 쓰고, ${esc(spec.axes[spec.axes.length-1][0])}처럼 나중에 익숙해지는 항목은 낮춰도 됩니다.
 ${esc(spec.one)}</p>
+${bridge(seed, esc)}
 ${faqHtml}
 ${relHtml}
 `;
