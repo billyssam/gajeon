@@ -1,0 +1,425 @@
+{
+ "at": "2026-09-13T09:48:54.427Z",
+ "topics": [
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "유모차",
+   "kind": "기둥",
+   "n": 51,
+   "score": 39.5,
+   "topic": "유모차 고르는 기준"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "카시트",
+   "kind": "기둥",
+   "n": 39,
+   "score": 26,
+   "topic": "카시트 고르는 기준"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "젖병",
+   "kind": "기둥",
+   "n": 55,
+   "score": 24,
+   "topic": "젖병 고르는 기준"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "아기띠",
+   "kind": "기둥",
+   "n": 32,
+   "score": 20,
+   "topic": "아기띠 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "냄비",
+   "kind": "기둥",
+   "n": 41,
+   "score": 17,
+   "topic": "냄비 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "도마",
+   "kind": "기둥",
+   "n": 26,
+   "score": 16,
+   "topic": "도마 고르는 기준"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "부스터",
+   "kind": "기둥",
+   "n": 23,
+   "score": 13,
+   "topic": "부스터 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "텀블러",
+   "kind": "기둥",
+   "n": 25,
+   "score": 12.9,
+   "topic": "텀블러 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "프라이팬",
+   "kind": "기둥",
+   "n": 23,
+   "score": 12.4,
+   "topic": "프라이팬 고르는 기준"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "아기침대",
+   "kind": "기둥",
+   "n": 23,
+   "score": 11.5,
+   "topic": "아기침대 고르는 기준"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "분유포트",
+   "kind": "기둥",
+   "n": 21,
+   "score": 11,
+   "topic": "분유포트 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "웍",
+   "kind": "기둥",
+   "n": 31,
+   "score": 9.7,
+   "topic": "웍 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "제습제",
+   "kind": "기둥",
+   "n": 20,
+   "score": 9.5,
+   "topic": "제습제 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "주방칼",
+   "kind": "기둥",
+   "n": 19,
+   "score": 9,
+   "topic": "주방칼 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "찜기",
+   "kind": "기둥",
+   "n": 20,
+   "score": 9,
+   "topic": "찜기 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "다리미",
+   "kind": "기둥",
+   "n": 20,
+   "score": 8.8,
+   "topic": "다리미 고르는 기준"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "휴대용유모차",
+   "kind": "기둥",
+   "n": 12,
+   "score": 8.3,
+   "topic": "휴대용유모차 고르는 기준"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "보행기",
+   "kind": "기둥",
+   "n": 19,
+   "score": 8,
+   "topic": "보행기 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "압력솥",
+   "kind": "기둥",
+   "n": 18,
+   "score": 8,
+   "topic": "압력솥 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "보온병",
+   "kind": "기둥",
+   "n": 18,
+   "score": 8,
+   "topic": "보온병 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "수납장",
+   "kind": "기둥",
+   "n": 14,
+   "score": 8,
+   "topic": "수납장 고르는 기준"
+  },
+  {
+   "cat": "home",
+   "catName": "가전",
+   "seed": "전기밥솥",
+   "kind": "질문",
+   "axis": "인용",
+   "n": 28,
+   "score": 6.3,
+   "topic": "전기밥솥 몇 인용을 사야 하나"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "빨래건조대",
+   "kind": "기둥",
+   "n": 14,
+   "score": 6,
+   "topic": "빨래건조대 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "식기건조대",
+   "kind": "기둥",
+   "n": 12,
+   "score": 5,
+   "topic": "식기건조대 고르는 기준"
+  },
+  {
+   "cat": "home",
+   "catName": "가전",
+   "seed": "식기세척기",
+   "kind": "질문",
+   "axis": "인용",
+   "n": 15,
+   "score": 4,
+   "topic": "식기세척기 몇 인용을 사야 하나"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "젖병",
+   "kind": "질문",
+   "axis": "차이",
+   "n": 4,
+   "score": 4,
+   "topic": "젖병 뭐가 다른가"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "젖병",
+   "kind": "질문",
+   "axis": "소독",
+   "n": 11,
+   "score": 4,
+   "topic": "젖병 소독은 어떻게 하나"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "젖병소독기",
+   "kind": "기둥",
+   "n": 10,
+   "score": 4,
+   "topic": "젖병소독기 고르는 기준"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "유축기",
+   "kind": "기둥",
+   "n": 17,
+   "score": 4,
+   "topic": "유축기 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "조리도구",
+   "kind": "기둥",
+   "n": 14,
+   "score": 4,
+   "topic": "조리도구 고르는 기준"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "바운서",
+   "kind": "기둥",
+   "n": 14,
+   "score": 3.7,
+   "topic": "바운서 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "밀폐용기",
+   "kind": "기둥",
+   "n": 15,
+   "score": 3.5,
+   "topic": "밀폐용기 고르는 기준"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "아기욕조",
+   "kind": "기둥",
+   "n": 12,
+   "score": 3,
+   "topic": "아기욕조 고르는 기준"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "유아매트",
+   "kind": "기둥",
+   "n": 8,
+   "score": 3,
+   "topic": "유아매트 고르는 기준"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "아기체육관",
+   "kind": "기둥",
+   "n": 13,
+   "score": 3,
+   "topic": "아기체육관 고르는 기준"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "젖병건조대",
+   "kind": "기둥",
+   "n": 12,
+   "score": 3,
+   "topic": "젖병건조대 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "빨래바구니",
+   "kind": "기둥",
+   "n": 13,
+   "score": 3,
+   "topic": "빨래바구니 고르는 기준"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "기저귀갈이대",
+   "kind": "기둥",
+   "n": 14,
+   "score": 2.8,
+   "topic": "기저귀갈이대 고르는 기준"
+  },
+  {
+   "cat": "home",
+   "catName": "가전",
+   "seed": "냉장고",
+   "kind": "질문",
+   "axis": "리터",
+   "n": 23,
+   "score": 2.7,
+   "topic": "냉장고 몇 리터가 맞나"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "유아식탁의자",
+   "kind": "기둥",
+   "n": 8,
+   "score": 2,
+   "topic": "유아식탁의자 고르는 기준"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "분유제조기",
+   "kind": "기둥",
+   "n": 12,
+   "score": 2,
+   "topic": "분유제조기 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "냄비",
+   "kind": "질문",
+   "axis": "사이즈",
+   "n": 7,
+   "score": 2,
+   "topic": "냄비 사이즈는 어떻게 고르나"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "주방저울",
+   "kind": "기둥",
+   "n": 11,
+   "score": 2,
+   "topic": "주방저울 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "스텐냄비",
+   "kind": "기둥",
+   "n": 13,
+   "score": 2,
+   "topic": "스텐냄비 고르는 기준"
+  },
+  {
+   "cat": "baby",
+   "catName": "육아용품",
+   "seed": "베이비모니터",
+   "kind": "기둥",
+   "n": 8,
+   "score": 1,
+   "topic": "베이비모니터 고르는 기준"
+  },
+  {
+   "cat": "kitchen",
+   "catName": "주방·생활",
+   "seed": "욕실선반",
+   "kind": "기둥",
+   "n": 6,
+   "score": 0,
+   "topic": "욕실선반 고르는 기준"
+  }
+ ]
+}
