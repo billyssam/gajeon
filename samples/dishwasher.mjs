@@ -30,27 +30,9 @@ export const SAMPLE = {
 <p>즉 <b>"14인용은 커서 우리 집에 안 들어간다"는 걱정은 대개 사실이 아닙니다.</b> 들어갈 자리가 있느냐는 인용 수가 아니라 하부장 치수가 정합니다.</p>
 
 <h2>그럼 무엇이 다른가 — 안쪽 구조</h2>
+<img src="../img/식기세척기-12인용-14인용/1.png" alt="12인용과 14인용은 인용 수보다 안쪽 선반 구조 차이가 크다" width="1200" height="675" loading="lazy">
 <p>차이는 바구니에 있습니다. 14인용은 같은 부피 안에서 선반을 나누고 꽂이를 늘려 그릇을 더 세울 수 있게 만든 것입니다. 제조사 설명으로는 대략 2인분이 더 들어갑니다.</p>
 
-<figure class="fig">
-<svg viewBox="0 0 620 210" role="img" aria-label="12인용과 14인용의 바구니 구조 차이 — 부피는 같고 선반과 꽂이가 다르다">
-  <g fill="none" stroke="#17181a" stroke-width="1.4">
-    <rect x="40" y="30" width="220" height="140"/><rect x="360" y="30" width="220" height="140"/>
-  </g>
-  <g stroke="#8a8f96" stroke-width="1">
-    <line x1="40" y1="78" x2="260" y2="78"/><line x1="40" y1="126" x2="260" y2="126"/>
-    <line x1="360" y1="66" x2="580" y2="66"/><line x1="360" y1="108" x2="580" y2="108"/><line x1="360" y1="146" x2="580" y2="146"/>
-  </g>
-  <g stroke="#1a56db" stroke-width="1.2">
-    <g>${[0,1,2,3,4,5].map(i=>`<line x1="${60+i*32}" y1="132" x2="${60+i*32}" y2="164"/>`).join("")}</g>
-    <g>${[0,1,2,3,4,5,6,7].map(i=>`<line x1="${376+i*26}" y1="152" x2="${376+i*26}" y2="164"/>`).join("")}</g>
-  </g>
-  <text x="150" y="192" text-anchor="middle" font-size="13" fill="#17181a" font-weight="600">12인용 — 칸 2 · 꽂이 성김</text>
-  <text x="470" y="192" text-anchor="middle" font-size="13" fill="#17181a" font-weight="600">14인용 — 칸 3 · 꽂이 촘촘</text>
-  <text x="310" y="105" text-anchor="middle" font-size="12" fill="#8a8f96">같은 부피</text>
-</svg>
-<figcaption>겉 부피는 같고 안쪽 선반·꽂이 수가 다릅니다. 그래서 "몇 개"보다 "어떤 모양이 들어가느냐"가 갈립니다. 구조는 모델마다 다르니 개념도로 보십시오.</figcaption>
-</figure>
 <p>그래서 실제로 갈리는 것은 <b>"몇 개가 들어가느냐"보다 "어떤 모양이 들어가느냐"</b>입니다. 같은 14인용이라도 위 칸 높이를 조절할 수 있는지, 아래 칸 꽂이를 접을 수 있는지에 따라 냄비가 들어가고 안 들어가고가 갈립니다.</p>
 <p class="note">정확한 식기 개수는 시험 규격(EN 50242)에서 정의된 세트 기준이고, 제조사·모델마다 달라 여기에 숫자로 적지 않습니다. 확인하지 못한 값은 쓰지 않는 것이 이 사이트의 원칙입니다.</p>
 
@@ -67,6 +49,7 @@ export const SAMPLE = {
 <p>그래서 순서는 이렇습니다. 주방을 손댈 수 있으면 12인용부터 보고, 손댈 수 없으면 6인용을 봅니다. 인용 수를 먼저 정하고 설치를 맞추는 것이 아니라, <b>설치 가능한 범위를 먼저 정하고 그 안에서 인용 수를 고릅니다.</b></p>
 
 <h2>설치 형태가 인용 수보다 먼저다</h2>
+<img src="../img/식기세척기-12인용-14인용/2.png" alt="빌트인·세미빌트인·프리스탠딩은 가져갈 수 있느냐가 다르다" width="1200" height="675" loading="lazy">
 <p>같은 14인용이라도 설치 형태가 다르면 완전히 다른 제품입니다. 세 가지로 갈립니다.</p>
 <ul>
 <li><b>빌트인</b> — 하부장 안에 넣고 앞면을 싱크대 문짝과 맞춥니다. 주방이 정돈되지만 <b>하부장 하나를 통째로 내줘야 하고</b>, 이사할 때 그대로 두고 가는 경우가 많습니다.</li>
@@ -74,67 +57,11 @@ export const SAMPLE = {
 <li><b>프리스탠딩</b> — 그냥 바닥에 놓습니다. 자리만 있으면 되고 이사할 때 가져갈 수 있지만, 주방에서 존재감이 큽니다.</li>
 </ul>
 
-<figure class="fig">
-<svg viewBox="0 0 660 200" role="img" aria-label="설치 형태 세 가지 비교 — 빌트인, 세미빌트인, 프리스탠딩">
-  <g stroke="#17181a" fill="none" stroke-width="1.4">
-    <rect x="30" y="40" width="150" height="110"/><rect x="255" y="40" width="150" height="110"/>
-  </g>
-  <rect x="36" y="46" width="138" height="98" fill="#17181a"/>
-  <text x="105" y="100" text-anchor="middle" font-size="12" fill="#fff">문짝을 맞춘다</text>
-  <rect x="261" y="46" width="138" height="98" fill="#f6f7f8" stroke="#8a8f96"/>
-  <text x="330" y="100" text-anchor="middle" font-size="12" fill="#54585e">제품 앞면 그대로</text>
-  <rect x="490" y="46" width="138" height="104" fill="#f6f7f8" stroke="#8a8f96" stroke-width="1.4"/>
-  <line x1="480" y1="150" x2="638" y2="150" stroke="#17181a" stroke-width="1.4"/>
-  <text x="559" y="100" text-anchor="middle" font-size="12" fill="#54585e">바닥에 놓는다</text>
-  <text x="105" y="172" text-anchor="middle" font-size="13" fill="#17181a" font-weight="600">빌트인</text>
-  <text x="330" y="172" text-anchor="middle" font-size="13" fill="#17181a" font-weight="600">세미빌트인</text>
-  <text x="559" y="172" text-anchor="middle" font-size="13" fill="#17181a" font-weight="600">프리스탠딩</text>
-  <text x="105" y="190" text-anchor="middle" font-size="11" fill="#8a8f96">하부장 내줌 · 두고 감</text>
-  <text x="330" y="190" text-anchor="middle" font-size="11" fill="#8a8f96">하부장 내줌 · 설치 간단</text>
-  <text x="559" y="190" text-anchor="middle" font-size="11" fill="#8a8f96">자리만 있으면 됨 · 가져감</text>
-</svg>
-<figcaption>설치 형태 셋. 전월세라면 "가져갈 수 있느냐"가 인용 수보다 먼저 걸립니다.</figcaption>
-</figure>
 <p>전월세라면 <b>가져갈 수 있느냐</b>가 중요한 기준이 됩니다. 빌트인은 두고 가는 쪽에 가깝고, 프리스탠딩은 가져가는 쪽입니다. 이걸 정하지 않고 인용 수부터 고르면 나중에 후보를 처음부터 다시 고르게 됩니다.</p>
 
 <h2>설치가 안 되면 인용 수는 의미가 없다</h2>
+<img src="../img/식기세척기-12인용-14인용/3.png" alt="하부장 치수·급배수·콘센트 셋 중 하나만 막혀도 설치가 안 된다" width="1200" height="675" loading="lazy">
 <p>이 제품군에서 가장 흔한 실패는 용량을 잘못 고른 것이 아니라 <b>설치가 안 되는 것</b>입니다. 물을 쓰는 가전이라 조건이 셋 다 맞아야 합니다.</p>
-<figure class="fig">
-<svg viewBox="0 0 640 330" role="img" aria-label="식기세척기 설치 치수 — 하부장 폭 600mm 깊이 575mm 높이 815~900mm, 문 열림 공간 591~594mm">
-  <defs>
-    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
-      <path d="M0 0 L10 5 L0 10 z" fill="#8a8f96"/>
-    </marker>
-  </defs>
-  <!-- 하부장 -->
-  <rect x="70" y="40" width="200" height="210" fill="none" stroke="#17181a" stroke-width="1.5"/>
-  <!-- 제품 -->
-  <rect x="78" y="48" width="184" height="194" fill="#f6f7f8" stroke="#8a8f96" stroke-width="1"/>
-  <text x="170" y="150" text-anchor="middle" font-size="13" fill="#54585e">식기세척기</text>
-  <!-- 열린 문 -->
-  <path d="M78 242 L262 242 L392 292 L208 292 z" fill="#fff" stroke="#1a56db" stroke-width="1.3" stroke-dasharray="4 3"/>
-  <text x="300" y="278" font-size="11" fill="#1a56db">문을 연 상태</text>
-  <!-- 치수: 폭 -->
-  <line x1="70" y1="26" x2="270" y2="26" stroke="#8a8f96" marker-start="url(#a)" marker-end="url(#a)"/>
-  <text x="170" y="20" text-anchor="middle" font-size="12" fill="#54585e">하부장 폭 600mm</text>
-  <!-- 치수: 높이 -->
-  <line x1="54" y1="40" x2="54" y2="250" stroke="#8a8f96" marker-start="url(#a)" marker-end="url(#a)"/>
-  <text x="46" y="150" text-anchor="middle" font-size="12" fill="#54585e" transform="rotate(-90 46 150)">높이 815~900mm</text>
-  <!-- 치수: 문 열림 -->
-  <line x1="270" y1="310" x2="400" y2="310" stroke="#1a56db" marker-start="url(#a)" marker-end="url(#a)"/>
-  <text x="335" y="326" text-anchor="middle" font-size="12" fill="#1a56db">문 열림 591~594mm</text>
-  <!-- 호스·전원 -->
-  <path d="M262 70 C 330 70, 340 110, 420 110" fill="none" stroke="#54585e" stroke-width="1.2"/>
-  <text x="430" y="114" font-size="12" fill="#54585e">급수 3.0m (최대 4.0m)</text>
-  <path d="M262 92 C 330 92, 340 145, 420 145" fill="none" stroke="#54585e" stroke-width="1.2"/>
-  <text x="430" y="149" font-size="12" fill="#54585e">배수 2.5m (최대 4.5m)</text>
-  <circle cx="420" cy="185" r="5" fill="none" stroke="#17181a" stroke-width="1.3"/>
-  <line x1="262" y1="185" x2="414" y2="185" stroke="#17181a" stroke-width="1.2" stroke-dasharray="3 3"/>
-  <text x="430" y="189" font-size="12" fill="#17181a">전원선 1.5m — 하부장 안 콘센트</text>
-</svg>
-<figcaption>설치에 필요한 치수. 제조사 공식 설치 안내의 값으로 그렸습니다. 이 셋 중 하나만 막혀도 인용 수는 의미가 없습니다.</figcaption>
-</figure>
-
 <ul>
 <li><b>급수·배수</b> — 급수 호스는 기본 3.0m(최대 4.0m), 배수 호스는 기본 2.5m(최대 4.5m)입니다. 싱크대 배관에서 제품까지 이 길이 안에 닿아야 합니다.</li>
 <li><b>전원</b> — 전원선이 1.5m입니다. <b>하부장 안에 콘센트가 있어야 합니다.</b> 없으면 전기 공사가 먼저입니다.</li>
@@ -144,6 +71,7 @@ export const SAMPLE = {
 
 
 <h2>건조 방식이 만족도를 더 크게 가른다</h2>
+<img src="../img/식기세척기-12인용-14인용/4.png" alt="여열·열풍·자동문열림은 꺼낼 때의 물기가 다르다" width="1200" height="675" loading="lazy">
 <p>인용 수를 한참 고민하다 정작 안 보고 넘어가는 항목이 건조입니다. 그런데 쓰다 보면 <b>불만이 가장 자주 나오는 쪽이 여기</b>입니다.</p>
 <ul>
 <li><b>여열 건조</b> — 세척 때 데워진 열로 말립니다. 전기를 덜 쓰지만 플라스틱 용기처럼 열을 덜 머금는 그릇에는 물방울이 남습니다.</li>
@@ -175,25 +103,8 @@ export const SAMPLE = {
 <p>그래서 매장에서 물어볼 것 하나가 늘어납니다. <b>"필터를 어떻게 빼나요?"</b> 손이 들어가고 도구 없이 분리되면 관리가 이어지고, 아니면 대개 안 하게 됩니다.</p>
 
 <h2>우리 집에서 재야 할 다섯 가지</h2>
+<img src="../img/식기세척기-12인용-14인용/5.png" alt="줄자로 10분이면 후보가 두세 개로 줄어든다" width="1200" height="675" loading="lazy">
 
-<figure class="fig">
-<svg viewBox="0 0 620 230" role="img" aria-label="우리 집에서 재야 할 다섯 곳">
-  <rect x="60" y="30" width="240" height="150" fill="none" stroke="#17181a" stroke-width="1.5"/>
-  <rect x="60" y="180" width="240" height="16" fill="#f6f7f8" stroke="#8a8f96"/>
-  <text x="180" y="192" text-anchor="middle" font-size="10" fill="#8a8f96">걸레받이는 빼고 잰다</text>
-  <line x1="60" y1="18" x2="300" y2="18" stroke="#1a56db" marker-start="url(#a)" marker-end="url(#a)"/>
-  <text x="180" y="12" text-anchor="middle" font-size="12" fill="#1a56db">① 안쪽 폭</text>
-  <line x1="46" y1="30" x2="46" y2="180" stroke="#1a56db" marker-start="url(#a)" marker-end="url(#a)"/>
-  <text x="38" y="105" text-anchor="middle" font-size="12" fill="#1a56db" transform="rotate(-90 38 105)">② 안쪽 높이</text>
-  <line x1="300" y1="105" x2="360" y2="105" stroke="#1a56db" marker-end="url(#a)"/>
-  <text x="368" y="109" font-size="12" fill="#1a56db">③ 안쪽 깊이</text>
-  <circle cx="330" cy="60" r="6" fill="none" stroke="#17181a" stroke-width="1.3"/>
-  <text x="344" y="64" font-size="12" fill="#17181a">④ 하부장 안 콘센트</text>
-  <line x1="330" y1="150" x2="470" y2="150" stroke="#1a56db" marker-start="url(#a)" marker-end="url(#a)"/>
-  <text x="400" y="168" text-anchor="middle" font-size="12" fill="#1a56db">⑤ 문 연 뒤 통로 폭</text>
-</svg>
-<figcaption>줄자로 10분이면 끝납니다. 이 다섯을 적어 가면 매장에서 후보가 두세 개로 줄어듭니다.</figcaption>
-</figure>
 <p>줄자 하나면 10분이면 끝납니다. 매장에 가기 전에 재 두면 후보가 몇 개로 줄어듭니다.</p>
 <ol>
 <li>하부장 안쪽 <b>폭·깊이·높이</b> (걸레받이를 뺀 실제 안쪽 치수)</li>

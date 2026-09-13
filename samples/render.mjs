@@ -32,14 +32,22 @@ const html = page({ title: S.title, desc: S.desc, body, up: "../", ad: true,
 .spec thead th{font-size:13px;color:var(--ink3);font-weight:600}
 .spec td:first-child{color:var(--ink2);width:34%}
 .src{font-size:13px;color:var(--ink3);margin:-8px 0 var(--s4)}
-.fig{margin:0 0 var(--s4);padding:var(--s3);border:1px solid var(--line);border-radius:8px;background:#fff}
-.fig svg{display:block;width:100%;height:auto}
-.fig figcaption{margin-top:var(--s2);font-size:13px;color:var(--ink3);line-height:1.6}
+main img{display:block;width:100%;height:auto;border-radius:8px;margin:var(--s3) 0 var(--s4)}
 </style>`);
-fs.mkdirSync("samples/out", { recursive: true });
-fs.writeFileSync("samples/out/index.html", html);
+// 🔴 실제 사이트와 같은 구조로 낸다(글은 /<slug>/, 이미지는 /img/<slug>/).
+//    안 그러면 상대경로가 달라져 샘플에서만 이미지가 깨진다 — 그러면 검증이 거짓말이 된다.
+fs.mkdirSync(`samples/out/${S.slug}`, { recursive: true });
+fs.writeFileSync(`samples/out/${S.slug}/index.html`, html);
+// 카드 이미지 — 구글 1위가 쓰는 방식 그대로(문구 한 줄 + 제품 이미지 + 배경색)
+const { makeCards } = await import("../cards.mjs");
+makeCards(S.slug, ["용량보다 수납 구조","설치 형태가 먼저다","설치 전 확인할 것",
+  "건조 방식이 만족도를 가른다","우리 집에서 재야 할 다섯 곳"], `samples/out/img/${S.slug}`);
 const chars = body.replace(/<[^>]+>/g, "").replace(/\s+/g, "").length;
-console.log(`샘플 ${chars}자 · 파일 samples/out/index.html`);
+// 이미지가 실제로 그 자리에 있는지 세어 본다. 없으면 실패다.
+const need = 5, have = fs.existsSync(`samples/out/img/${S.slug}`)
+  ? fs.readdirSync(`samples/out/img/${S.slug}`).filter(f => f.endsWith(".png")).length : 0;
+if (have !== need) { console.error(`🔴 카드 ${need}장이어야 하는데 ${have}장이다`); process.exit(1); }
+console.log(`샘플 ${chars}자 · 카드 ${have}장 · samples/out/${S.slug}/index.html`);
 
 // dist 를 승인 전 상태로 되돌린다. 안 그러면 다음 배포가 제휴 링크를 싣고 나간다.
 delete process.env.COUPANG_APPROVED;
