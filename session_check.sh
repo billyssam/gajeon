@@ -23,4 +23,10 @@ import json
 for i in json.load(open('$CJ'))['items']:
     if not i['ok']: print('   ✗', i['t'][:100])" 2>/dev/null
 fi
+# 승인 전 점검 결과도 같이 민다 — 승인이 프로젝트를 막고 있다.
+AP="$G/dist_approval.log"
+if [ -f "$AP" ]; then
+  if grep -q "미흡 0" "$AP"; then echo "🟢 승인 전 점검 18항목 전부 통과($(grep -o '통과 [0-9]*' "$AP" | head -1))"
+  else echo "🔴 승인 전 점검 미흡 — $(grep -o '미흡 [0-9]*건' "$AP" | head -1) · gajeon/dist_approval.log"; fi
+fi
 exit 0

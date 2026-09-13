@@ -41,6 +41,12 @@ echo "올림 · ${PAGES}장 → gh-pages"
 
 cd "$HERE" && "$NODE" notify-index.mjs
 
+# 🔴 승인 전 점검 — 발행본을 실제로 두드려 본다. 빌드 결과가 아니라 라이브다.
+#    Pages 가 반영되는 데 시간이 걸리므로 막지는 않고 결과만 남긴다(다음 배포 때 걸린다).
+sleep 20
+"$NODE" approval.mjs > dist_approval.log 2>&1 || echo "🔴 승인 전 점검 미흡 — dist_approval.log 를 봐라"
+tail -3 dist_approval.log
+
 # 편별 실측을 콘솔로 밀어 올린다. 🔴 배포와 같은 순간의 값이어야 화면이 거짓말을 안 한다.
 if [ -f dist/stats.json ] && command -v gh >/dev/null; then
   SHA=$(gh api repos/billyssam/gonghak-ops/contents/blog-stats.json --jq .sha 2>/dev/null)
