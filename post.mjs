@@ -23,6 +23,8 @@ function 은는(w) { const j = josa(w, "은", "는"); return j && w + j; }
 function 와과(w) { const j = josa(w, "과", "와"); return j && w + j; }
 function 을를(w) { const j = josa(w, "을", "를"); return j ? w + j : w; }
 function 은는S(w) { const j = josa(w, "은", "는"); return j ? w + j : w; }
+// 받침 있는 씨드 뒤에 "라도" 가 붙어 "에어컨라도" 가 6편 나갔다(2026-09-13 정독에서 발견).
+function 이라도(w) { const j = josa(w, "이라도", "라도"); return j ? w + j : w + "라도"; }
 
 // 브랜드·모델명이 들어간 검색어는 질문으로 만들지 않는다.
 // 브랜드를 물어 놓고 일반론으로 답하면 그건 낚시다.
@@ -127,7 +129,7 @@ ${rel.map(g => `<a href="../${encodeURI(slugify(g.seed))}/">${esc(g.seed)} 고�
 ${axes}
 
 <h2>${esc(seed)}, 우리 집은 어느 쪽인가</h2>
-<p>같은 ${esc(seed)}라도 조건이 다르면 봐야 할 항목이 달라집니다. 해당하는 줄만 보셔도 됩니다.</p>
+<p>같은 ${esc(이라도(seed))} 조건이 다르면 봐야 할 항목이 달라집니다. 해당하는 줄만 보셔도 됩니다.</p>
 <ul>
 ${[[2, "혼자 살거나 공간이 좁다면"], [1, "가족이 많거나 매일 쓴다면"], [0, "예산을 줄여야 한다면"],
    [3, "관리에 손이 덜 가길 바란다면"], [4, "오래 쓸 생각이라면"]]

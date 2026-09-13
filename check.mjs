@@ -188,15 +188,19 @@ R("B1", MUST.every(m => dirs.includes(m)), `필수 페이지 ${MUST.join("·")}(
   // 받침으로 조사를 계산해 본다. 씨드 뒤에 틀린 조사가 붙으면 "인덕션를" 같은 말이 나간다.
   const 받침 = w => { const c = w.trim().slice(-1).charCodeAt(0);
     return (c < 0xAC00 || c > 0xD7A3) ? null : (c - 0xAC00) % 28 !== 0; };
+  // 🔴 조사는 이것만이 아니다. "에어컨라도" 가 6편 나갔다(2026-09-13 정독에서 발견) —
+  //    검사에 없던 조사였다. 새 조사를 쓰면 여기에도 같이 넣어라.
   const 짝 = { "을": true, "를": false, "은": true, "는": false, "이": true, "가": false,
-               "과": true, "와": false, "으로": true, "로": false };
+               "과": true, "와": false, "으로": true, "로": false,
+               "이라도": true, "라도": false, "이나": true, "나": false,
+               "이랑": true, "랑": false, "이라는": true, "라는": false };
   for (const d of posts) {
     const h = html(d);
     if (/을\(를\)|이\(가\)|은\(는\)|와\(과\)|로\(으로\)/.test(strip(h))) broken.push(d);
     const j = 받침(d);
     if (j !== null) {
       const t = strip(h);
-      for (const m of t.matchAll(new RegExp(`${d}(으로|을|를|은|는|이|가|과|와)(?![가-힣])`, "g")))
+      for (const m of t.matchAll(new RegExp(`${d}(이라도|이라는|이랑|이나|라도|라는|으로|을|를|은|는|이|가|과|와|랑|나|로)(?![가-힣])`, "g")))
         if (짝[m[1]] !== j) { josaBad.push(`${d}${m[1]}`); break; }
     }
     const f = h.match(/<div class="faq">([\s\S]*?)<\/div>/);
