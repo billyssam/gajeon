@@ -21,7 +21,10 @@ const strip = h => h.replace(/<script[\s\S]*?<\/script>/g, "").replace(/<style[\
 const list = a => a.length ? a.slice(0, 4).join(", ") : "없음";
 
 if (!fs.existsSync(OUT)) { console.error("dist 가 없다 — build 부터"); process.exit(1); }
-const dirs = fs.readdirSync(OUT, { withFileTypes: true }).filter(d => d.isDirectory()).map(d => d.name);
+// 🔴 img 는 카드 이미지 폴더지 글이 아니다. 안 빼면 dist/img/index.html 을 열려다 죽는다.
+const SKIP = new Set(["img"]);
+const dirs = fs.readdirSync(OUT, { withFileTypes: true })
+  .filter(d => d.isDirectory() && !SKIP.has(d.name)).map(d => d.name);
 const posts = dirs.filter(d => !MUST.includes(d));
 const html = d => fs.readFileSync(path.join(OUT, d, "index.html"), "utf-8");
 const home = fs.readFileSync(path.join(OUT, "index.html"), "utf-8");
@@ -237,6 +240,27 @@ R("B1", MUST.every(m => dirs.includes(m)), `필수 페이지 ${MUST.join("·")}(
     if (miss.length) bad.push(`${d}(${miss.join("·")})`);
   }
   R("E7", bad.length === 0, `머리말 전수(빠진 곳: ${list(bad)})`);
+}
+
+// E8 이미지. 🔴 상위 글은 본문 이미지가 1~17장인데 우리는 0장이었다.
+//    파일이 실제로 있는지까지 본다 — 태그만 있고 파일이 없으면 깨진 그림이다.
+{
+  const bad = [];
+  for (const d of posts) {
+    const h = html(d);
+    const tags = [...h.matchAll(/<img[^>]+>/g)].map(m => m[0]);
+    const miss = [];
+    if (tags.length < 3) miss.push(`${tags.length}장`);
+    for (const t of tags) {
+      const src = (t.match(/src="([^"]+)"/) || [])[1] || "";
+      const alt = (t.match(/alt="([^"]*)"/) || [])[1] || "";
+      if (!alt.trim()) miss.push("alt 빔");
+      const f = path.join(OUT, decodeURIComponent(src.replace(/^\.\.\//, "")));
+      if (src && !fs.existsSync(f)) miss.push(`파일 없음 ${src}`);
+    }
+    if (miss.length) bad.push(`${d}(${[...new Set(miss)].join("·")})`);
+  }
+  R("E8", bad.length === 0, `글마다 카드 3장 이상 + alt + 파일 존재(걸린 곳: ${list(bad)})`);
 }
 
 // ── 규정과 검사가 어긋나지 않는지 ────────────────────────────────

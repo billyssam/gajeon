@@ -45,7 +45,7 @@ makeCards(S.slug, ["용량보다 수납 구조","설치 형태가 먼저다","�
 const chars = body.replace(/<[^>]+>/g, "").replace(/\s+/g, "").length;
 // 이미지가 실제로 그 자리에 있는지 세어 본다. 없으면 실패다.
 const need = 5, have = fs.existsSync(`samples/out/img/${S.slug}`)
-  ? fs.readdirSync(`samples/out/img/${S.slug}`).filter(f => f.endsWith(".png")).length : 0;
+  ? fs.readdirSync(`samples/out/img/${S.slug}`).filter(f => f.endsWith(".jpg")).length : 0;
 if (have !== need) { console.error(`🔴 카드 ${need}장이어야 하는데 ${have}장이다`); process.exit(1); }
 console.log(`샘플 ${chars}자 · 카드 ${have}장 · samples/out/${S.slug}/index.html`);
 

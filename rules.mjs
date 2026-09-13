@@ -57,6 +57,8 @@ export const RULES = [
   { id: "E6", text: "워커는 자기 저장소에서만 돈다", gate: true },
   { id: "E7", text: "모든 쪽에 doctype·lang·canonical·구조화 데이터가 있어야 한다",
     src: "쿼크 모드로 그려지던 것을 2026-09-13 에 발견", gate: true },
+  { id: "E8", text: "글마다 섹션 카드 이미지가 3장 이상 · alt 는 비어 있지 않다",
+    src: "구글 상위 실측 — 본문 이미지 1~17장, 우리는 0장이었다(2026-09-13)", gate: true },
 ];
 
 // 각인 ① — 무슨 일을 하든 규정을 먼저 찍고 시작한다.

@@ -5,6 +5,7 @@ import { buildPost } from "./post.mjs";
 import { SPECS } from "./specs.mjs";
 import { DETAIL } from "./detail.mjs";
 import { PAGES } from "./pages.mjs";
+import { makeCards } from "./cards.mjs";
 import { 각인 } from "./rules.mjs";
 
 각인("빌드 시작");
@@ -73,6 +74,7 @@ li{margin-bottom:var(--s2)}
 .shop a{display:inline-block;margin:0 var(--s2) var(--s2) 0;padding:6px var(--s3);
   border:1px solid var(--line);border-radius:999px;font-size:14px}
 .shop p{margin:var(--s1) 0 0;font-size:12px;color:var(--ink3)}
+main img{display:block;width:100%;height:auto;border-radius:8px;margin:var(--s3) 0 var(--s4)}
 .rel{background:var(--band);border-radius:8px;padding:var(--s3);margin-top:var(--s5)}
 .rel b{display:block;font-size:14px;margin-bottom:var(--s2)}
 .rel a{display:block;padding:var(--s1) 0;font-size:15px}
@@ -210,15 +212,37 @@ if (skipped.length) console.log(`대기 중인 제품군 ${skipped.length}: ${sk
 //    순서를 고정해 두면 매 빌드마다 같은 제목이 나온다(주소·제목이 흔들리면 색인이 손해다).
 groups.forEach((g, i) => { g.variant = i % 4; });
 
+// 🔴 섹션 카드 — 구글 상위가 실제로 쓰는 방식 그대로다(2026-09-13 실측: 그돈이면 카드 5장).
+//    1200×675 · 문구 한 줄 · 제품 그림 · 배경색 순환. alt 는 문장형.
+//    이미지 0장이면 사람에게도 검색에도 불리하다 — 상위 글은 본문 이미지가 1~17장이다.
+const CARD_AT = ["고르는 기준", "우리 집은 어느 쪽인가", "사기 전 확인할 것", "자주 나오는 실패"];
+
 const posts = [];
 for (const g of groups) {
   const post = buildPost(g, groups, { esc, n, makeTitle, slugify, YEAR, 광고자리 });
-  const dir = path.join(OUT, slugify(g.seed));
+  const slug = slugify(g.seed);
+  const dir = path.join(OUT, slug);
   fs.mkdirSync(dir, { recursive: true });
+
+  // 카드 제목은 그 편의 소제목에서 가져온다 — 지어내지 않는다.
+  const heads = [...post.body.matchAll(/<h2>([\s\S]*?)<\/h2>/g)].map(m => m[1].replace(/<[^>]+>/g, ""));
+  const picked = CARD_AT.map(k => heads.find(h => h.includes(k))).filter(Boolean);
+  makeCards(slug, picked, path.join(OUT, "img", slug));
+
+  let body = post.body;
+  picked.forEach((h, i) => {
+    const tag = `<h2>${esc(h)}</h2>`;
+    const at = body.indexOf(tag);
+    if (at < 0) return;
+    body = body.slice(0, at + tag.length)
+      + `\n<img src="../img/${encodeURI(slug)}/${i + 1}.jpg" alt="${esc(g.seed)} — ${esc(h)}" width="1200" height="675" loading="lazy">`
+      + body.slice(at + tag.length);
+  });
+
   fs.writeFileSync(path.join(dir, "index.html"),
-    page({ title: post.title, desc: post.desc, body: post.body, up: "../", ad: true,
-           path: encodeURI(slugify(g.seed)) + "/", crumb: g.seed }));
-  posts.push({ ...post, slug: slugify(g.seed), seed: g.seed });
+    page({ title: post.title, desc: post.desc, body, up: "../", ad: true,
+           path: encodeURI(slug) + "/", crumb: g.seed }));
+  posts.push({ ...post, body, slug, seed: g.seed, cards: picked.length });
 }
 
 const list = posts.map(p => `<li><a href="${encodeURI(p.slug)}/">${esc(p.title)}</a></li>`).join("\n");

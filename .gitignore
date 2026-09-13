@@ -8,3 +8,4 @@ dist/
 coupang-proof.png
 dist_approval.log
 samples/out/
+.cache/
