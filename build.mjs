@@ -4,6 +4,7 @@ import { makeTitle, slugify, groupBySeed, YEAR } from "./writer.mjs";
 import { buildPost } from "./post.mjs";
 import { SPECS } from "./specs.mjs";
 import { DETAIL } from "./detail.mjs";
+import { PAGES } from "./pages.mjs";
 
 const OUT = "dist", DATA = "data";
 const SITE = "가전 고르는 기준";
@@ -65,6 +66,9 @@ a:hover{text-decoration:underline}
   font-size:15px;color:var(--ink2);margin:0 0 var(--s4)}
 .note{background:var(--band);border-left:3px solid var(--ink3);padding:var(--s3);
   font-size:15px;color:var(--ink2);margin:0 0 var(--s3)}
+.fnav{display:flex;flex-wrap:wrap;gap:var(--s3);margin-bottom:var(--s2)}
+.fnav a{font-size:13px}
+.contact{font-size:18px;font-weight:700;margin:var(--s2) 0 var(--s4)}
 footer{border-top:1px solid var(--line);padding:var(--s4) 0 var(--s6);
   font-size:13px;color:var(--ink3)}
 @media(max-width:640px){body{font-size:16px}h1{font-size:24px}h2{font-size:19px}.lede{font-size:17px}}
@@ -84,15 +88,18 @@ const COUPANG = `<div class="cp"><script src="https://ads-partners.coupang.com/g
 const ADS_CLIENT = "ca-pub-8092073462948926";
 const ADS = `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADS_CLIENT}" crossorigin="anonymous"></script>`;
 
-export function page({ title, desc, body, up = "" }) {
+export function page({ title, desc, body, up = "", ad = false }) {
   return `<meta name="description" content="${esc(desc)}">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title>
 ${ADS}
 <style>${CSS}</style>
 <header><div class="wrap"><b><a href="${up || "./"}">${SITE}</a></b><span>${TAGLINE}</span></div></header>
-<main><div class="wrap">${body}${up ? COUPANG : ""}</div></main>
-<footer><div class="wrap">${SITE} · 이 글은 제품을 직접 써 보고 쓴 후기가 아니라, 고르는 기준을 정리한 글입니다.</div></footer>`;
+<main><div class="wrap">${body}${ad ? COUPANG : ""}</div></main>
+<footer><div class="wrap">
+<nav class="fnav"><a href="${up || "./"}">홈</a><a href="${up}about/">소개</a><a href="${up}contact/">문의</a><a href="${up}privacy/">개인정보처리방침</a></nav>
+<p>${SITE} · 이 글은 제품을 직접 써 보고 쓴 후기가 아니라, 고르는 기준을 정리한 글입니다.</p>
+</div></footer>`;
 }
 
 fs.rmSync(OUT, { recursive: true, force: true });
@@ -113,7 +120,7 @@ for (const g of groups) {
   const dir = path.join(OUT, slugify(g.seed));
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, "index.html"),
-    page({ title: post.title, desc: post.desc, body: post.body, up: "../" }));
+    page({ title: post.title, desc: post.desc, body: post.body, up: "../", ad: true }));
   posts.push({ ...post, slug: slugify(g.seed), seed: g.seed });
 }
 
@@ -130,9 +137,18 @@ fs.writeFileSync(path.join(OUT, "index.html"), page({
 <ol>${list}</ol>`,
 }));
 
+// 필수 페이지. 🔴 애드센스 거절 사유 1순위가 "이 페이지들이 없음" 이다.
+for (const pg of PAGES) {
+  const dir = path.join(OUT, pg.slug);
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, "index.html"),
+    page({ title: `${pg.title} — ${SITE}`, desc: pg.desc, body: pg.body, up: "../" }));
+}
+console.log(`필수 페이지 ${PAGES.length}쪽`);
+
 // 사이트맵 · robots — 크롤러가 이 사이트를 아는 유일한 길
 const today = new Date().toISOString().slice(0, 10);
-const urls = ["", ...posts.map(p => encodeURI(p.slug) + "/")]
+const urls = ["", ...PAGES.map(pg => pg.slug + "/"), ...posts.map(p => encodeURI(p.slug) + "/")]
   .map(u => `  <url><loc>${SITE_URL}/${u}</loc><lastmod>${today}</lastmod></url>`).join("\n");
 fs.writeFileSync(path.join(OUT, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);

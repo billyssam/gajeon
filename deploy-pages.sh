@@ -9,6 +9,9 @@ WT="$HERE/.gh-pages"
 
 "$NODE" build.mjs || { echo "빌드 실패"; exit 1; }
 
+# 🔴 배포 전 전수 검사. 우회 경로를 두지 않는다 — 여기서 걸리면 올라가지 않는다.
+"$NODE" check.mjs || { echo "검사 실패 — 배포하지 않는다"; exit 1; }
+
 if [ ! -d "$WT/.git" ]; then
   git worktree remove --force "$WT" 2>/dev/null
   rm -rf "$WT"
@@ -41,6 +44,8 @@ cd "$HERE" && "$NODE" notify-index.mjs
 # 편별 실측을 콘솔로 밀어 올린다. 🔴 배포와 같은 순간의 값이어야 화면이 거짓말을 안 한다.
 if [ -f dist/stats.json ] && command -v gh >/dev/null; then
   SHA=$(gh api repos/billyssam/gonghak-ops/contents/blog-stats.json --jq .sha 2>/dev/null)
+  # 실측과 검사 결과를 한 파일로 합쳐 올린다 — 콘솔이 둘 다 읽는다
+  "$NODE" -e 'const fs=require("fs");const a=JSON.parse(fs.readFileSync("dist/stats.json"));a.check=JSON.parse(fs.readFileSync("dist/check.json"));fs.writeFileSync("dist/stats.json",JSON.stringify(a,null,1))'
   ARGS=(-f message="stats: $(date '+%m-%d %H:%M')" -f content="$(base64 -i dist/stats.json | tr -d '\n')")
   [ -n "$SHA" ] && ARGS+=(-f sha="$SHA")
   gh api -X PUT repos/billyssam/gonghak-ops/contents/blog-stats.json "${ARGS[@]}" --jq '.content.name' \
