@@ -120,6 +120,15 @@ export const ADS_SLOTS = {
   글끝: "",       // ←
 };
 
+// 🔴 방문 측정. 2026-09-13 실측: **아무것도 안 붙어 있었다** — 그래서 화면이 "7일 방문 미측정" 이었다.
+//    승인 뒤에 붙이면 그때부터 0 에서 시작한다. **승인 전부터 쌓여 있어야** 승인 직후
+//    "어느 글이 먹히는지" 를 보고 다음 글을 정할 수 있다. 그게 이 사이트의 목적이다.
+//    측정 ID 한 줄만 채우면 전 쪽에 들어간다. 비어 있으면 아무것도 안 나간다.
+export const GA_ID = "";   // ← analytics.google.com 에서 받은 "G-XXXXXXXXXX"
+const GA = GA_ID ? `<script async src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"></script>`
+  + `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}`
+  + `gtag('js',new Date());gtag('config','${GA_ID}');</script>` : "";
+
 // 규정 B2 — 메뉴·내비게이션으로 오인하게 두지 않는다. 본문 안·글 끝만 쓴다.
 // 규정 B3 — 개인정보처리방침·문의·소개에는 넣지 않는다(글 페이지에서만 부른다).
 export function 광고자리(자리) {
@@ -171,7 +180,7 @@ export function page({ title, desc, body, up = "", ad = false, path = "", crumb 
 <meta property="og:site_name" content="${esc(SITE)}">
 <meta property="og:locale" content="ko_KR">
 <script type="application/ld+json">${JSON.stringify(ld)}</script>
-${ADS}
+${ADS}${GA}
 <style>${CSS}</style>
 </head>
 <body>
@@ -276,4 +285,7 @@ if (thin.length) { console.error(`너무 짧다(${MIN}자 미만): ${thin.join("
 }
 
 const chars = posts.reduce((a, p) => a + p.chars, 0);
-console.log(`dist · ${posts.length}편 · 평균 ${Math.round(chars / posts.length)}자 · 사이트맵 ${posts.length + 1}개`);
+// 🔴 사이트맵 수를 posts+1 로 찍고 있었다 — 정책 3쪽이 빠진 값이라 로그가 거짓말이었다.
+//    실제로 쓴 파일을 세서 찍는다.
+const smCount = (fs.readFileSync(path.join(OUT, "sitemap.xml"), "utf-8").match(/<loc>/g) || []).length;
+console.log(`dist · ${posts.length}편 · 평균 ${Math.round(chars / posts.length)}자 · 사이트맵 ${smCount}개`);
