@@ -31,6 +31,26 @@ export const SAMPLE = {
 
 <h2>그럼 무엇이 다른가 — 안쪽 구조</h2>
 <p>차이는 바구니에 있습니다. 14인용은 같은 부피 안에서 선반을 나누고 꽂이를 늘려 그릇을 더 세울 수 있게 만든 것입니다. 제조사 설명으로는 대략 2인분이 더 들어갑니다.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 620 210" role="img" aria-label="12인용과 14인용의 바구니 구조 차이 — 부피는 같고 선반과 꽂이가 다르다">
+  <g fill="none" stroke="#17181a" stroke-width="1.4">
+    <rect x="40" y="30" width="220" height="140"/><rect x="360" y="30" width="220" height="140"/>
+  </g>
+  <g stroke="#8a8f96" stroke-width="1">
+    <line x1="40" y1="78" x2="260" y2="78"/><line x1="40" y1="126" x2="260" y2="126"/>
+    <line x1="360" y1="66" x2="580" y2="66"/><line x1="360" y1="108" x2="580" y2="108"/><line x1="360" y1="146" x2="580" y2="146"/>
+  </g>
+  <g stroke="#1a56db" stroke-width="1.2">
+    <g>${[0,1,2,3,4,5].map(i=>`<line x1="${60+i*32}" y1="132" x2="${60+i*32}" y2="164"/>`).join("")}</g>
+    <g>${[0,1,2,3,4,5,6,7].map(i=>`<line x1="${376+i*26}" y1="152" x2="${376+i*26}" y2="164"/>`).join("")}</g>
+  </g>
+  <text x="150" y="192" text-anchor="middle" font-size="13" fill="#17181a" font-weight="600">12인용 — 칸 2 · 꽂이 성김</text>
+  <text x="470" y="192" text-anchor="middle" font-size="13" fill="#17181a" font-weight="600">14인용 — 칸 3 · 꽂이 촘촘</text>
+  <text x="310" y="105" text-anchor="middle" font-size="12" fill="#8a8f96">같은 부피</text>
+</svg>
+<figcaption>겉 부피는 같고 안쪽 선반·꽂이 수가 다릅니다. 그래서 "몇 개"보다 "어떤 모양이 들어가느냐"가 갈립니다. 구조는 모델마다 다르니 개념도로 보십시오.</figcaption>
+</figure>
 <p>그래서 실제로 갈리는 것은 <b>"몇 개가 들어가느냐"보다 "어떤 모양이 들어가느냐"</b>입니다. 같은 14인용이라도 위 칸 높이를 조절할 수 있는지, 아래 칸 꽂이를 접을 수 있는지에 따라 냄비가 들어가고 안 들어가고가 갈립니다.</p>
 <p class="note">정확한 식기 개수는 시험 규격(EN 50242)에서 정의된 세트 기준이고, 제조사·모델마다 달라 여기에 숫자로 적지 않습니다. 확인하지 못한 값은 쓰지 않는 것이 이 사이트의 원칙입니다.</p>
 
@@ -53,6 +73,28 @@ export const SAMPLE = {
 <li><b>세미빌트인</b> — 하부장 자리에 넣되 앞면은 제품 그대로 둡니다. 문짝을 맞추는 작업이 없어 설치가 간단합니다.</li>
 <li><b>프리스탠딩</b> — 그냥 바닥에 놓습니다. 자리만 있으면 되고 이사할 때 가져갈 수 있지만, 주방에서 존재감이 큽니다.</li>
 </ul>
+
+<figure class="fig">
+<svg viewBox="0 0 660 200" role="img" aria-label="설치 형태 세 가지 비교 — 빌트인, 세미빌트인, 프리스탠딩">
+  <g stroke="#17181a" fill="none" stroke-width="1.4">
+    <rect x="30" y="40" width="150" height="110"/><rect x="255" y="40" width="150" height="110"/>
+  </g>
+  <rect x="36" y="46" width="138" height="98" fill="#17181a"/>
+  <text x="105" y="100" text-anchor="middle" font-size="12" fill="#fff">문짝을 맞춘다</text>
+  <rect x="261" y="46" width="138" height="98" fill="#f6f7f8" stroke="#8a8f96"/>
+  <text x="330" y="100" text-anchor="middle" font-size="12" fill="#54585e">제품 앞면 그대로</text>
+  <rect x="490" y="46" width="138" height="104" fill="#f6f7f8" stroke="#8a8f96" stroke-width="1.4"/>
+  <line x1="480" y1="150" x2="638" y2="150" stroke="#17181a" stroke-width="1.4"/>
+  <text x="559" y="100" text-anchor="middle" font-size="12" fill="#54585e">바닥에 놓는다</text>
+  <text x="105" y="172" text-anchor="middle" font-size="13" fill="#17181a" font-weight="600">빌트인</text>
+  <text x="330" y="172" text-anchor="middle" font-size="13" fill="#17181a" font-weight="600">세미빌트인</text>
+  <text x="559" y="172" text-anchor="middle" font-size="13" fill="#17181a" font-weight="600">프리스탠딩</text>
+  <text x="105" y="190" text-anchor="middle" font-size="11" fill="#8a8f96">하부장 내줌 · 두고 감</text>
+  <text x="330" y="190" text-anchor="middle" font-size="11" fill="#8a8f96">하부장 내줌 · 설치 간단</text>
+  <text x="559" y="190" text-anchor="middle" font-size="11" fill="#8a8f96">자리만 있으면 됨 · 가져감</text>
+</svg>
+<figcaption>설치 형태 셋. 전월세라면 "가져갈 수 있느냐"가 인용 수보다 먼저 걸립니다.</figcaption>
+</figure>
 <p>전월세라면 <b>가져갈 수 있느냐</b>가 중요한 기준이 됩니다. 빌트인은 두고 가는 쪽에 가깝고, 프리스탠딩은 가져가는 쪽입니다. 이걸 정하지 않고 인용 수부터 고르면 나중에 후보를 처음부터 다시 고르게 됩니다.</p>
 
 <h2>설치가 안 되면 인용 수는 의미가 없다</h2>
@@ -133,6 +175,25 @@ export const SAMPLE = {
 <p>그래서 매장에서 물어볼 것 하나가 늘어납니다. <b>"필터를 어떻게 빼나요?"</b> 손이 들어가고 도구 없이 분리되면 관리가 이어지고, 아니면 대개 안 하게 됩니다.</p>
 
 <h2>우리 집에서 재야 할 다섯 가지</h2>
+
+<figure class="fig">
+<svg viewBox="0 0 620 230" role="img" aria-label="우리 집에서 재야 할 다섯 곳">
+  <rect x="60" y="30" width="240" height="150" fill="none" stroke="#17181a" stroke-width="1.5"/>
+  <rect x="60" y="180" width="240" height="16" fill="#f6f7f8" stroke="#8a8f96"/>
+  <text x="180" y="192" text-anchor="middle" font-size="10" fill="#8a8f96">걸레받이는 빼고 잰다</text>
+  <line x1="60" y1="18" x2="300" y2="18" stroke="#1a56db" marker-start="url(#a)" marker-end="url(#a)"/>
+  <text x="180" y="12" text-anchor="middle" font-size="12" fill="#1a56db">① 안쪽 폭</text>
+  <line x1="46" y1="30" x2="46" y2="180" stroke="#1a56db" marker-start="url(#a)" marker-end="url(#a)"/>
+  <text x="38" y="105" text-anchor="middle" font-size="12" fill="#1a56db" transform="rotate(-90 38 105)">② 안쪽 높이</text>
+  <line x1="300" y1="105" x2="360" y2="105" stroke="#1a56db" marker-end="url(#a)"/>
+  <text x="368" y="109" font-size="12" fill="#1a56db">③ 안쪽 깊이</text>
+  <circle cx="330" cy="60" r="6" fill="none" stroke="#17181a" stroke-width="1.3"/>
+  <text x="344" y="64" font-size="12" fill="#17181a">④ 하부장 안 콘센트</text>
+  <line x1="330" y1="150" x2="470" y2="150" stroke="#1a56db" marker-start="url(#a)" marker-end="url(#a)"/>
+  <text x="400" y="168" text-anchor="middle" font-size="12" fill="#1a56db">⑤ 문 연 뒤 통로 폭</text>
+</svg>
+<figcaption>줄자로 10분이면 끝납니다. 이 다섯을 적어 가면 매장에서 후보가 두세 개로 줄어듭니다.</figcaption>
+</figure>
 <p>줄자 하나면 10분이면 끝납니다. 매장에 가기 전에 재 두면 후보가 몇 개로 줄어듭니다.</p>
 <ol>
 <li>하부장 안쪽 <b>폭·깊이·높이</b> (걸레받이를 뺀 실제 안쪽 치수)</li>
