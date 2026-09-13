@@ -5,6 +5,9 @@ import { buildPost } from "./post.mjs";
 import { SPECS } from "./specs.mjs";
 import { DETAIL } from "./detail.mjs";
 import { PAGES } from "./pages.mjs";
+import { 각인 } from "./rules.mjs";
+
+각인("빌드 시작");
 
 const OUT = "dist", DATA = "data";
 const SITE = "가전 고르는 기준";
@@ -55,6 +58,8 @@ li{margin-bottom:var(--s2)}
 .cp{margin-top:var(--s5);padding-top:var(--s3);border-top:1px solid var(--line);
   overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
 .cp iframe{display:block}
+.cpnote.top{font-size:13px;color:var(--ink2);background:var(--band);
+  border-radius:6px;padding:var(--s2) var(--s3);margin:0 0 var(--s4)}
 .cpnote{font-size:12px;color:var(--ink3);margin:var(--s2) 0 0;line-height:1.6;
   position:sticky;left:0}
 .rel{background:var(--band);border-radius:8px;padding:var(--s3);margin-top:var(--s5)}
@@ -81,14 +86,25 @@ footer{border-top:1px solid var(--line);padding:var(--s4) 0 var(--s6);
 //    쿠팡 화면 문구 그대로: "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다."
 //    문구 없이 배너만 달면 수익금 지급이 중단될 수 있다고 쿠팡이 명시한다.
 const CP_ID = 1028910, CP_TRACK = "AF2403241";
+// 🔴 규정 A1 — 공정위 추천·보증 심사지침(2024-12-01 시행)은 블로그 등 문자 중심 매체에서
+//    표시문구를 "반드시 게시물의 제목 또는 첫 부분에" 게재하도록 한다. 끝에만 두면 안 된다.
+//    2026-09-13 까지 20편 전부 맨 아래에만 있었다 — 위반이었다.
+// 🔴 규정 A2 — "받을 수 있음" 같은 조건부·불확정 표현은 불명확 표시로 본다. 확정형으로 쓴다.
+export const CP_NOTE = "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.";
 const COUPANG = `<div class="cp"><script src="https://ads-partners.coupang.com/g.js"><\/script>
 <script>new PartnersCoupang.G({"id":${CP_ID},"template":"carousel","trackingCode":"${CP_TRACK}","width":"680","height":"140","tsource":""});<\/script>
-<p class="cpnote">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p></div>`;
+<p class="cpnote">${CP_NOTE}</p></div>`;
 
 const ADS_CLIENT = "ca-pub-8092073462948926";
 const ADS = `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADS_CLIENT}" crossorigin="anonymous"></script>`;
 
 export function page({ title, desc, body, up = "", ad = false }) {
+  // 규정 A1 — 제휴가 붙는 글은 첫 부분에 고지가 있어야 한다. 여기 한 자리에서 꽂는다.
+  if (ad) {
+    const i = body.indexOf("</h1>");
+    if (i < 0) throw new Error("h1 이 없어 고지를 첫 부분에 넣을 수 없다 — 규정 A1");
+    body = body.slice(0, i + 5) + `\n<p class="cpnote top">${CP_NOTE}</p>` + body.slice(i + 5);
+  }
   return `<meta name="description" content="${esc(desc)}">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title>
@@ -113,6 +129,10 @@ const kw = JSON.parse(fs.readFileSync(path.join(DATA, kwFiles.at(-1)), "utf-8"))
 const groups = groupBySeed(kw.rows).filter(g => SPECS[g.seed] && DETAIL[g.seed]);
 const skipped = groupBySeed(kw.rows).filter(g => !(SPECS[g.seed] && DETAIL[g.seed]));
 if (skipped.length) console.log(`대기 중인 제품군 ${skipped.length}: ${skipped.map(g => g.seed).join(" ")}`);
+
+// 🔴 제목 틀을 넷으로 돌린다(규정 C1 — 같은 틀을 찍어내지 않는다).
+//    순서를 고정해 두면 매 빌드마다 같은 제목이 나온다(주소·제목이 흔들리면 색인이 손해다).
+groups.forEach((g, i) => { g.variant = i % 4; });
 
 const posts = [];
 for (const g of groups) {

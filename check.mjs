@@ -1,84 +1,215 @@
-// 배포 전 전수 검사. 🔴 하나라도 걸리면 exit 1 — 배포 자체가 안 된다.
+// 배포 전 전수 검사. 🔴 하나라도 걸리면 exit 1 — 배포 자체가 안 된다(규정 E4).
 //    "내가 검수해서 막는다" 는 언젠가 깜빡한다. 게이트가 막아야 한다.
-//    각 항목은 실제 거절·정지 사유다(2026-09-13 실측으로 찾은 것들).
+// 🔴 검사는 규정 ID 로 붙는다. 규정(rules.mjs)에 gate:true 인데 검사가 없으면 그것도 실패다 —
+//    "규정만 적어 두고 안 막는" 상태를 코드가 금지한다.
 import fs from "node:fs";
 import path from "node:path";
+import { RULES, 각인 } from "./rules.mjs";
+
+각인("배포 전 검사");
 
 const OUT = "dist";
 const AD = "ca-pub-8092073462948926";
 const CP = "AF2403241";
 const CP_NOTE = "쿠팡 파트너스 활동의 일환";
 const MUST = ["privacy", "contact", "about"];
-const MIN_CHARS = 1700, MAX_DUP = 15;   // 중복 15% 넘으면 중복 콘텐츠로 걸린다
+const MIN_CHARS = 1700, MAX_DUP = 15, MAX_DENSITY = 6, MAX_ONE_TITLE = 60;
 
 const strip = h => h.replace(/<script[\s\S]*?<\/script>/g, "").replace(/<style[\s\S]*?<\/style>/g, "")
                     .replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-const fail = [], pass = [];
-const check = (cond, msg) => (cond ? pass : fail).push(msg);
+const list = a => a.length ? a.slice(0, 4).join(", ") : "없음";
 
 if (!fs.existsSync(OUT)) { console.error("dist 가 없다 — build 부터"); process.exit(1); }
 const dirs = fs.readdirSync(OUT, { withFileTypes: true }).filter(d => d.isDirectory()).map(d => d.name);
 const posts = dirs.filter(d => !MUST.includes(d));
 const html = d => fs.readFileSync(path.join(OUT, d, "index.html"), "utf-8");
+const home = fs.readFileSync(path.join(OUT, "index.html"), "utf-8");
+const title = h => (h.match(/<title>([\s\S]*?)<\/title>/) || [, ""])[1];
+const chars = d => strip(html(d)).replace(/\s/g, "").length;
 
-// ① 필수 페이지 — 애드센스 거절 사유 1순위
-for (const m of MUST) check(dirs.includes(m), `필수 페이지 ${m}`);
+const done = new Map();                       // 규정 ID → {ok, msg}
+const R = (id, ok, msg) => done.set(id, { ok, msg });
 
-// ② 광고 코드가 전 페이지에
-const noAd = [...dirs.map(d => [d, html(d)]), ["(홈)", fs.readFileSync(path.join(OUT, "index.html"), "utf-8")]]
-  .filter(([, h]) => !h.includes(AD)).map(([d]) => d);
-check(noAd.length === 0, `애드센스 코드 전 페이지(빠진 곳: ${noAd.join(" ") || "없음"})`);
-
-// ③ 쿠팡 배너가 있으면 고지 문구가 반드시 같이 — 없으면 수익금 지급이 중단된다
-const noNote = posts.filter(d => { const h = html(d); return h.includes(CP) && !h.includes(CP_NOTE); });
-check(noNote.length === 0, `쿠팡 고지 문구(누락: ${noNote.join(" ") || "없음"})`);
-
-// ④ 정책 페이지에 제휴 배너가 새지 않았나
-const leak = MUST.filter(m => dirs.includes(m) && html(m).includes(CP));
-check(leak.length === 0, `정책 페이지에 제휴 배너 없음(샌 곳: ${leak.join(" ") || "없음"})`);
-
-// ⑤ 글 길이
-const thin = posts.map(d => [d, strip(html(d)).replace(/\s/g, "").length]).filter(([, n]) => n < MIN_CHARS);
-check(thin.length === 0, `글 ${MIN_CHARS}자 이상(미달: ${thin.map(([d, n]) => `${d} ${n}`).join(", ") || "없음"})`);
-
-// ⑥ 중복 콘텐츠 — 편 대부분에 똑같이 나오는 문장의 비율
-const cnt = new Map();
-for (const d of posts)
-  for (const s of new Set(strip(html(d)).split(/(?<=다\.)\s+/).map(x => x.trim()).filter(x => x.length > 15)))
-    cnt.set(s, (cnt.get(s) || 0) + 1);
-const dup = [...cnt].filter(([, n]) => n >= posts.length * 0.8);
-const dupChars = dup.reduce((a, [s]) => a + s.replace(/\s/g, "").length, 0);
-const avg = posts.reduce((a, d) => a + strip(html(d)).replace(/\s/g, "").length, 0) / posts.length;
-const dupPct = Math.round(dupChars / avg * 100);
-check(dupPct <= MAX_DUP, `편 간 중복 ${dupPct}% (상한 ${MAX_DUP}%)`);
-
-// ⑦ 사이트맵이 실제 페이지를 다 담았나
-const sm = fs.readFileSync(path.join(OUT, "sitemap.xml"), "utf-8");
-const locs = [...sm.matchAll(/<loc>([^<]+)<\/loc>/g)].length;
-check(locs === dirs.length + 1, `사이트맵 ${locs}개 = 페이지 ${dirs.length + 1}개`);
-
-// ⑧ 내부 링크가 실제 파일을 가리키나(깨진 링크는 심사·사용자 양쪽에 나쁘다)
-const broken = [];
-for (const d of dirs) {
-  for (const m of html(d).matchAll(/href="(\.\.\/[^"#?]+)"/g)) {
-    const target = path.join(OUT, decodeURIComponent(m[1].replace(/^\.\.\//, "")));
-    if (!fs.existsSync(target) && !fs.existsSync(path.join(target, "index.html"))) broken.push(`${d} → ${m[1]}`);
-  }
+// ── A. 쿠팡 파트너스 · 공정거래위원회 ─────────────────────────────
+// A1 고지를 제목 또는 첫 부분에. 🔴 맨 아래에만 두면 위반이다(2024-12-01 시행).
+{
+  const bad = posts.filter(d => !/<\/h1>\s*<p class="cpnote top">[^<]*쿠팡 파트너스 활동의 일환/.test(html(d)));
+  R("A1", bad.length === 0, `고지가 글 첫 부분에(빠진 곳: ${list(bad)})`);
 }
-check(broken.length === 0, `내부 링크(깨짐: ${broken.slice(0, 3).join(", ") || "없음"})`);
+// A2 조건부·불확정 표현 금지
+{
+  const bad = posts.filter(d => /수수료를?\s*(지급)?받을\s*수\s*(도\s*)?있/.test(strip(html(d))));
+  R("A2", bad.length === 0, `고지에 '받을 수 있음' 류 불확정 표현 없음(걸린 곳: ${list(bad)})`);
+}
+// A3 배너가 있는 모든 페이지에 고지
+{
+  const bad = [...dirs, "(홈)"].filter(d => {
+    const h = d === "(홈)" ? home : html(d);
+    return h.includes(CP) && !h.includes(CP_NOTE);
+  });
+  R("A3", bad.length === 0, `배너에 고지 문구(누락: ${list(bad)})`);
+}
+// A4 정책 페이지에 배너 금지
+{
+  const leak = MUST.filter(m => dirs.includes(m) && html(m).includes(CP));
+  R("A4", leak.length === 0, `정책 페이지에 제휴 배너 없음(샌 곳: ${list(leak)})`);
+}
+// A5 자동 이동·클릭 유도 금지
+{
+  const bad = [...dirs, "(홈)"].filter(d => {
+    const h = d === "(홈)" ? home : html(d);
+    return /http-equiv=["']refresh|location\.(href|replace)\s*=|window\.open\s*\(/i.test(h)
+        || /광고를?\s*클릭|여기를?\s*눌러\s*주세요/.test(strip(h));
+  });
+  R("A5", bad.length === 0, `자동 이동·클릭 유도 없음(걸린 곳: ${list(bad)})`);
+}
+// A6 가격·순위를 글에 박지 않는다
+{
+  const bad = posts.filter(d => /\d{1,3}(,\d{3})+\s*원|\d+\s*만\s*원|₩\s*\d|\d+\s*위\b/.test(strip(html(d))));
+  R("A6", bad.length === 0, `가격·순위 표기 없음(걸린 곳: ${list(bad)})`);
+}
 
-// ⑨ robots 가 크롤러를 막지 않나
-const rb = fs.readFileSync(path.join(OUT, "robots.txt"), "utf-8");
-check(!/Disallow:\s*\/\s*$/m.test(rb), "robots.txt 가 전체를 막지 않음");
+// ── B. 구글 애드센스 ─────────────────────────────────────────────
+R("B1", MUST.every(m => dirs.includes(m)), `필수 페이지 ${MUST.join("·")}(빠진 곳: ${list(MUST.filter(m => !dirs.includes(m)))})`);
+// B2 광고를 메뉴·내비게이션으로 오인하게 두지 않는다
+{
+  const bad = [...dirs, "(홈)"].filter(d => {
+    const h = d === "(홈)" ? home : html(d);
+    const nav = [...h.matchAll(/<(nav|footer)[\s\S]*?<\/\1>/g)].map(m => m[0]).join("");
+    return nav.includes(AD) || nav.includes(CP);
+  });
+  R("B2", bad.length === 0, `메뉴·바닥글 안에 광고 없음(걸린 곳: ${list(bad)})`);
+}
+// B3 얇은 페이지에 광고를 넣지 않는다
+{
+  const bad = posts.filter(d => html(d).includes(CP) && chars(d) < MIN_CHARS);
+  R("B3", bad.length === 0, `${MIN_CHARS}자 미만 글에 제휴 배너 없음(걸린 곳: ${list(bad)})`);
+}
+// B4 제목이 약속한 것을 본문이 준다.
+//    🔴 이 사이트는 제품을 추천하지 않는다(기준만 쓴다). 그러니 제목이 추천·순위·최저가를
+//       약속하면 본문이 그걸 줄 수 없다 — 2026-09-13 까지 20편 전부 "추천 5가지" 였다.
+{
+  const PROMISE = /추천\s*\d|\d\s*가지\s*추천|BEST|베스트\s*\d|순위\s*\d|랭킹|최저가|가격\s*비교/i;
+  const bad = [...posts.map(d => [d, title(html(d))]), ["(홈)", title(home)]]
+    .filter(([, t]) => PROMISE.test(t)).map(([d]) => d);
+  R("B4", bad.length === 0, `제목이 본문에 없는 것을 약속하지 않음(걸린 곳: ${list(bad)})`);
+}
 
-// 결과를 파일로도 남긴다 — 콘솔이 이걸 읽어 대표에게 보여 준다.
+// ── C. 구글 검색 스팸정책 ────────────────────────────────────────
+// C1 얇은 제휴 — 같은 틀을 찍어내지 않는다
+{
+  const pats = posts.map(d => title(html(d)).replace(/^[^ ,]+/, "<X>"));
+  const cnt = new Map();
+  for (const p of pats) cnt.set(p, (cnt.get(p) || 0) + 1);
+  const top = Math.max(...cnt.values()), pct = Math.round(top / posts.length * 100);
+  R("C1", cnt.size >= 3 && pct <= MAX_ONE_TITLE, `제목 틀 ${cnt.size}종 · 최다 ${pct}% (상한 ${MAX_ONE_TITLE}%)`);
+}
+// C2 대량 생성 — 편마다 자기만의 문장이 절반은 넘어야 한다
+{
+  const sents = d => new Set(strip(html(d)).split(/(?<=다\.)\s+/).map(x => x.trim()).filter(x => x.length > 15));
+  const all = new Map();
+  const per = posts.map(d => [d, sents(d)]);
+  for (const [, S] of per) for (const s of S) all.set(s, (all.get(s) || 0) + 1);
+  const bad = per.filter(([, S]) => [...S].filter(s => all.get(s) === 1).length / S.size < 0.5).map(([d]) => d);
+  R("C2", bad.length === 0, `편마다 고유 문장 절반 이상(미달: ${list(bad)})`);
+}
+// C3 키워드 스터핑
+{
+  const bad = posts.map(d => {
+    const t = strip(html(d)), n = t.replace(/\s/g, "").length;
+    const c = t.split(d).length - 1;
+    return [d, Math.round(c * d.length / n * 1000) / 10];
+  }).filter(([, p]) => p > MAX_DENSITY);
+  R("C3", bad.length === 0, `씨드 밀도 ${MAX_DENSITY}% 이하(넘은 곳: ${list(bad.map(([d, p]) => `${d} ${p}%`))})`);
+}
+// C4 편 간 중복
+{
+  const cnt = new Map();
+  for (const d of posts)
+    for (const s of new Set(strip(html(d)).split(/(?<=다\.)\s+/).map(x => x.trim()).filter(x => x.length > 15)))
+      cnt.set(s, (cnt.get(s) || 0) + 1);
+  const dup = [...cnt].filter(([, n]) => n >= posts.length * 0.8);
+  const dupChars = dup.reduce((a, [s]) => a + s.replace(/\s/g, "").length, 0);
+  const avg = posts.reduce((a, d) => a + chars(d), 0) / posts.length;
+  const pct = Math.round(dupChars / avg * 100);
+  R("C4", pct <= MAX_DUP, `편 간 중복 ${pct}% (상한 ${MAX_DUP}%)`);
+}
+
+// ── E. 이 프로젝트의 원칙 ────────────────────────────────────────
+// E1 브랜드·제품명을 쓰지 않는다
+{
+  const BRAND = /LG|엘지|삼성|위니아|딤채|쿠쿠|쿠첸|로보락|로보락|샤오미|다이슨|코웨이|청호|위닉스|한일|휴롬|드롱기|네스프레소|일리|비스포크|디오스|그랑데|오브제|스마트싱스/i;
+  const bad = posts.filter(d => BRAND.test(strip(html(d))));
+  R("E1", bad.length === 0, `브랜드·제품명 없음(걸린 곳: ${list(bad)})`);
+}
+// E2 잰 것만 말한다 — 써 보지 않았으면 써 봤다고 하지 않는다
+{
+  const CLAIM = /직접\s*(써|사용|테스트)\s*(보|해)|사용해\s*본\s*결과|테스트\s*결과|실제로\s*써\s*보니/;
+  const bad = posts.filter(d => {
+    const t = strip(html(d));
+    // 🔴 고지 문장 자체가 "직접 써 본 후기가 아니라" 라서, 빼고 나서 검사한다.
+    const 고지뺀본문 = t.replace(/직접\s*써\s*(본|보고\s*쓴)\s*후기가\s*아니라/g, "");
+    return CLAIM.test(고지뺀본문) || !t.includes("후기가 아니라");
+  });
+  R("E2", bad.length === 0, `체험 주장 없음 + '후기가 아니라' 고지 있음(걸린 곳: ${list(bad)})`);
+}
+// E3 빈 것이 깨진 것보다 낫다 — 깨진 조사·겹치는 답을 발행하지 않는다
+{
+  const broken = [], dups = [], josaBad = [];
+  // 받침으로 조사를 계산해 본다. 씨드 뒤에 틀린 조사가 붙으면 "인덕션를" 같은 말이 나간다.
+  const 받침 = w => { const c = w.trim().slice(-1).charCodeAt(0);
+    return (c < 0xAC00 || c > 0xD7A3) ? null : (c - 0xAC00) % 28 !== 0; };
+  const 짝 = { "을": true, "를": false, "은": true, "는": false, "이": true, "가": false,
+               "과": true, "와": false, "으로": true, "로": false };
+  for (const d of posts) {
+    const h = html(d);
+    if (/을\(를\)|이\(가\)|은\(는\)|와\(과\)|로\(으로\)/.test(strip(h))) broken.push(d);
+    const j = 받침(d);
+    if (j !== null) {
+      const t = strip(h);
+      for (const m of t.matchAll(new RegExp(`${d}(으로|을|를|은|는|이|가|과|와)(?![가-힣])`, "g")))
+        if (짝[m[1]] !== j) { josaBad.push(`${d}${m[1]}`); break; }
+    }
+    const f = h.match(/<div class="faq">([\s\S]*?)<\/div>/);
+    if (f) {
+      const ans = [...f[1].matchAll(/<h3>[\s\S]*?<\/h3>\s*<p>([\s\S]*?)<\/p>/g)].map(m => m[1].trim());
+      if (new Set(ans).size !== ans.length) dups.push(d);
+    }
+  }
+  R("E3", broken.length === 0 && dups.length === 0 && josaBad.length === 0,
+    `조사 깨짐 없음(괄호: ${list(broken)} · 받침: ${list(josaBad)}) · FAQ 답 중복 없음(${list(dups)})`);
+}
+// E4 우회 경로가 없다 — 배포 스크립트가 이 검사를 부르고, 실패하면 멈춰야 한다
+{
+  const sh = fs.existsSync("deploy-pages.sh") ? fs.readFileSync("deploy-pages.sh", "utf-8") : "";
+  R("E4", /check\.mjs/.test(sh) && /검사 실패[\s\S]*exit 1/.test(sh), "배포 스크립트가 검사 실패 시 멈춤");
+}
+// E6 워커는 자기 저장소에서만 돈다
+{
+  const w = fs.existsSync("watch.mjs") ? fs.readFileSync("watch.mjs", "utf-8") : "";
+  R("E6", /MUST_REMOTE/.test(w) && /process\.exit\(1\)/.test(w), "워커에 저장소 가드 있음");
+}
+
+// ── 규정과 검사가 어긋나지 않는지 ────────────────────────────────
+{
+  const md = fs.existsSync("RULES.md") ? fs.readFileSync("RULES.md", "utf-8") : "";
+  const mdIds = new Set([...md.matchAll(/^\|\s*\*?\*?([A-E]\d)\*?\*?\s*\|/gm)].map(m => m[1]));
+  const jsIds = new Set(RULES.map(r => r.id));
+  const 빠짐 = [...jsIds].filter(x => !mdIds.has(x)), 남음 = [...mdIds].filter(x => !jsIds.has(x));
+  R("정본", 빠짐.length === 0 && 남음.length === 0,
+    `RULES.md 와 rules.mjs 가 같음(md에 없음: ${list(빠짐)} · md에만: ${list(남음)})`);
+  const 무검사 = RULES.filter(r => r.gate && !done.has(r.id)).map(r => r.id);
+  R("구현", 무검사.length === 0, `gate:true 인 규정에 검사가 다 있음(없는 것: ${list(무검사)})`);
+}
+
+// ── 결과 ─────────────────────────────────────────────────────────
+const rows = [...done].map(([id, v]) => ({ id, t: `${id} ${v.msg}`, ok: v.ok }));
+const passed = rows.filter(r => r.ok).length, failed = rows.length - passed;
 fs.writeFileSync(path.join(OUT, "check.json"), JSON.stringify({
-  checked_at: new Date().toISOString(),
-  total: pass.length + fail.length, passed: pass.length, failed: fail.length,
-  items: [...pass.map(t => ({ t, ok: true })), ...fail.map(t => ({ t, ok: false }))],
+  checked_at: new Date().toISOString(), rules: RULES.length,
+  total: rows.length, passed, failed, items: rows,
 }, null, 1) + "\n");
 
-console.log(`검사 ${pass.length + fail.length}항목 · 통과 ${pass.length} · 실패 ${fail.length}`);
-for (const p of pass) console.log(`  ✓ ${p}`);
-for (const f of fail) console.error(`  ✗ ${f}`);
-if (fail.length) { console.error("\n배포를 멈춘다. 위 항목을 고치고 다시 돌려라."); process.exit(1); }
+console.log(`검사 ${rows.length}항목 · 통과 ${passed} · 실패 ${failed}`);
+for (const r of rows) (r.ok ? console.log(`  ✓ ${r.t}`) : console.error(`  ✗ ${r.t}`));
+if (failed) { console.error("\n규정을 어긴다. 배포를 멈춘다."); process.exit(1); }

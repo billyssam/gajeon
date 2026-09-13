@@ -6,17 +6,28 @@ import fs from "node:fs";
 
 export const YEAR = new Date().getFullYear();
 
-// 제목 공식: 숫자 + 강한 말 + 키워드 + 연도 (50~60자를 노린다)
-export function makeTitle(kw, n = 5) {
-  const base = kw.replace(/\s*(추천|순위|가격|후기|리뷰|비교)\s*/g, "").trim();
+// 제목. 🔴 규정 B4 — 제목이 약속한 것을 본문이 준다.
+//    2026-09-13 까지 20편 전부 "추천 5가지" 였다. 이 글에는 추천 제품이 한 개도 없다.
+//    제목이 약속한 것을 본문이 주지 않으면 애드센스 방문페이지 품질 위반이고, 그 전에 거짓말이다.
+// 🔴 규정 C1 — 같은 틀을 찍어내지 않는다. 20편이 제품명만 바뀐 한 문장이면
+//    구글이 말하는 cookie-cutter template(얇은 제휴)이다. 그래서 틀을 넷으로 나누고,
+//    축 이름을 끌어와 제품군마다 실제로 다른 문장이 되게 한다(지어내는 값이 아니다).
+export function makeTitle(seed, spec, variant = 0) {
+  const base = seed.replace(/\s*(추천|순위|가격|후기|리뷰|비교)\s*/g, "").trim();
+  const ax = (spec && spec.axes) || [];
+  const n = ax.length || 5;
+  // 🔴 축 이름에 이미 가운뎃점이 들어 있는 제품군이 있다("가열식 · 초음파 · 기화식").
+  //    그걸 제목에 넣으면 "가열식 · 초음파 · 기화식·세척 편의에서 갈립니다" 처럼 읽히지 않는다.
+  //    그런 축은 제목에 쓰지 않는다 — 틀을 억지로 채우지 않고 다른 틀로 넘어간다.
+  const clean = i => (ax[i] && !/[·,]/.test(ax[i][0]) && ax[i][0].length <= 12) ? ax[i][0] : null;
+  const a1 = clean(0), a2 = clean(1);
   const cands = [
-    `${base} 추천 ${n}가지와 고르는 기준 — ${YEAR}년 살 때 확인할 것 정리`,
-    `${YEAR}년 ${base} 고르는 법 ${n}가지 — 사기 전에 꼭 확인해야 할 기준`,
-    `${base} 살 때 놓치기 쉬운 ${n}가지 — ${YEAR}년 기준으로 다시 정리했다`,
-    `${base} 어떤 걸 사야 하나 — ${YEAR}년 기준 ${n}가지로 좁히는 법`,
-  ];
-  // 50~60자에 가장 가까운 것을 고른다
-  return cands.map(t => [Math.abs(t.length - 55), t]).sort((a, b) => a[0] - b[0])[0][1];
+    `${base} 고르는 기준 ${n}가지 — 사기 전 확인할 것 정리`,
+    `${base}, 무엇을 기준으로 골라야 할까? — ${YEAR}년 확인 항목 ${n}가지`,
+    a1 ? `${base} 살 때 놓치기 쉬운 ${n}가지 — ${a1}부터 봅니다` : null,
+    (a1 && a2) ? `${YEAR}년 ${base} 고르는 법 — ${a1}·${a2}에서 갈립니다` : null,
+  ].filter(Boolean);
+  return cands[((variant % cands.length) + cands.length) % cands.length];
 }
 
 // 같은 시드(제품군)의 다른 키워드로 내부링크를 만든다 — 촘촘히 연결된 10편이 흩어진 30편을 이긴다

@@ -1,5 +1,5 @@
 import { SPECS, GENERIC } from "./specs.mjs";
-import { DETAIL } from "./detail.mjs";
+import { DETAIL, FIT } from "./detail.mjs";
 
 // 키워드를 사람이 묻는 문장으로 바꾼다. 🔴 억지로 만들지 않는다 —
 //    질문으로 읽히지 않는 키워드는 버린다(빈 FAQ가 깨진 FAQ보다 낫다).
@@ -20,6 +20,8 @@ function josa(word, withJong, withoutJong) {
 }
 function 은는(w) { const j = josa(w, "은", "는"); return j && w + j; }
 function 와과(w) { const j = josa(w, "과", "와"); return j && w + j; }
+function 을를(w) { const j = josa(w, "을", "를"); return j ? w + j : w; }
+function 은는S(w) { const j = josa(w, "은", "는"); return j ? w + j : w; }
 
 // 브랜드·모델명이 들어간 검색어는 질문으로 만들지 않는다.
 // 브랜드를 물어 놓고 일반론으로 답하면 그건 낚시다.
@@ -65,13 +67,19 @@ export function buildPost(group, allGroups, U) {
   const { esc, makeTitle, slugify, YEAR } = U;
   const seed = group.seed;
   const spec = SPECS[seed] || GENERIC;
-  const title = makeTitle(seed);
+  // 제목 틀은 제품군마다 돌려 쓴다(규정 C1). variant 는 build 가 넘긴다.
+  const title = makeTitle(seed, spec, group.variant || 0);
 
   // FAQ — 실제 검색어에서만 뽑는다
   const faqs = [];
   for (const kw of group.kws) {
     const q = toQuestion(kw, seed);
-    if (q && !faqs.some(f => f.q === q)) faqs.push({ q, kw });
+    if (!q || faqs.some(f => f.q === q)) continue;
+    // 🔴 답까지 만들어 보고 담는다. 답이 없거나(E3) 이미 나온 답과 같으면 버린다 —
+    //    질문만 다르고 답이 같은 FAQ 는 읽는 사람에게 아무것도 주지 않는다.
+    const a = faqAnswer({ q, kw }, seed, spec);
+    if (!a || faqs.some(f => f.a === a)) continue;
+    faqs.push({ q, kw, a });
     if (faqs.length >= 6) break;
   }
 
@@ -89,7 +97,7 @@ export function buildPost(group, allGroups, U) {
 <h2>자주 묻는 것</h2>
 <div class="faq">
 ${faqs.map(f => `<h3>${esc(f.q)}</h3>
-<p>${esc(faqAnswer(f, seed, spec))}</p>`).join("\n")}
+<p>${esc(f.a)}</p>`).join("\n")}
 </div>` : "";
 
   // 내부링크 — 같은 사이트의 다른 제품군으로. 촘촘히 잇는다.
@@ -104,10 +112,10 @@ ${rel.map(g => `<a href="../${encodeURI(slugify(g.seed))}/">${esc(g.seed)} 고�
 <p class="lede">${esc(spec.one)}</p>
 <p class="meta">${YEAR}년 기준 · ${esc(seed)} ${group.kws.length}개 검색어에서 추린 기준 ${spec.axes.length}가지 · 직접 써 본 후기가 아니라 <b>고르는 기준</b>을 정리한 글입니다.</p>
 
-<p>${esc(seed)}를 알아보기 시작하면 비슷한 제품이 수십 개씩 나옵니다.
+<p>${esc(을를(seed))} 알아보기 시작하면 비슷한 제품이 수십 개씩 나옵니다.
 그런데 ${esc(seed)}에서 실제로 갈리는 건 <b>${esc(spec.axes[0][0])}</b>·<b>${esc(spec.axes[1][0])}</b> 쪽이고,
 비교표에 크게 적힌 값이 늘 그 자리에 있는 것은 아닙니다.
-아래 ${spec.axes.length}가지는 ${esc(seed)}를 살 때 만족도를 가르는 항목만 추린 것입니다.</p>
+아래 ${spec.axes.length}가지는 ${esc(을를(seed))} 살 때 만족도를 가르는 항목만 추린 것입니다.</p>
 
 <div class="toc"><b>이 글에서 다루는 기준</b><ol>${toc}</ol></div>
 
@@ -144,7 +152,7 @@ ${det.wrong.map(w => `<li>${esc(w)}</li>`).join("\n")}
 <div class="note">${esc(spec.myth)}</div>
 
 <h2>정리하면</h2>
-<p>${esc(seed)}는 <b>${esc(spec.axes[0][0])}</b>에서 만족도가 가장 크게 갈립니다.
+<p>${esc(은는S(seed))} <b>${esc(spec.axes[0][0])}</b>에서 만족도가 가장 크게 갈립니다.
 예산이 빠듯하다면 여기에 먼저 쓰고, ${esc(spec.axes[spec.axes.length-1][0])}처럼 나중에 익숙해지는 항목은 낮춰도 됩니다.
 ${esc(spec.one)}</p>
 ${faqHtml}
@@ -156,6 +164,8 @@ ${relHtml}
 
 // 답은 기준에서 끌어온다. 🔴 제품명·가격을 지어내지 않는다.
 function faqAnswer(f, seed, spec) {
+  // 실제 검색어 1위 유형("추천" → 누구에게 맞나). 제품군마다 답이 다르다 — detail.mjs 에 손으로 쓴다.
+  if (/맞나요/.test(f.q)) return FIT[seed] || null;
   if (/다른가요/.test(f.q))
     return `쓰는 목적이 다릅니다. 하나로 두 가지를 다 하려는 겸용 제품도 있지만, 각각의 전용 제품보다 성능이 낮은 경우가 많습니다. 겸용은 공간과 값을 아끼는 대신 어느 쪽도 충분하지 않을 수 있다는 뜻입니다. 둘 다 자주 필요하다면 방을 나눠 따로 두는 편이 결과적으로 낫습니다.`;
   if (/비교해야/.test(f.q))
@@ -168,5 +178,8 @@ function faqAnswer(f, seed, spec) {
     return `순위는 판매량이나 광고 집행을 반영하는 경우가 많아 우리 집 조건과는 무관합니다. 순위를 후보를 좁히는 용도로만 쓰고, 결정은 위 기준으로 하는 편이 낫습니다.`;
   if (/맞는 크기/.test(f.q))
     return `표기 용량은 기준 조건에서의 값입니다. 실제로 쓰는 양보다 한 단계 넉넉한 쪽이 여유가 있고, 꽉 채워 쓰면 성능이 떨어지는 제품군이 많습니다.`;
-  return `${spec.axes[0][0]}을(를) 먼저 봅니다. ${String(spec.axes[0][1]).split(/(?<=다\.)\s/)[0]}`;
+  // 🔴 2026-09-13: 여기에 만능 답이 있었다. `을(를)` 을 그대로 찍어 18/20편이 깨졌고,
+  //    질문이 달라도 답이 같아 78개 중 24개가 겹쳤다. 규정 E3 — 빈 것이 깨진 것보다 낫다.
+  //    답을 못 만드는 질문은 만들지 않는다.
+  return null;
 }
