@@ -1,8 +1,8 @@
 {
- "harvested_at": "2026-09-13T00:05:33.482Z",
- "seeds": 15,
- "total": 480,
- "buy_intent": 102,
+ "harvested_at": "2026-09-13T05:21:41.142Z",
+ "seeds": 27,
+ "total": 939,
+ "buy_intent": 182,
  "rows": [
   {
    "kw": "로봇청소기",
@@ -2881,6 +2881,2760 @@
   {
    "kw": "예쁜 정수기 렌탈",
    "seed": "정수기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "세탁기",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "세탁기10KG",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "드럼세탁기",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "일반세탁기",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "통돌이세탁기",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "세탁기렌탈",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "세탁기통세척",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "세탁기추천",
+   "seed": "세탁기",
+   "buy": true,
+   "depth": 1
+  },
+  {
+   "kw": "삼성 세탁기 10kg 통돌이",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "세탁기 10kg 드럼",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "세탁기 10kg 이불 빨래",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "세탁기 10kg 무게",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "세탁기 10kg 통돌이",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "세탁기 10kg 가격",
+   "seed": "세탁기",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "세탁기 10kg 1등급",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "세탁기10KG 뜻",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "세탁기10KG 사용방법",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "드럼세탁기문잠김",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "소형드럼세탁기",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "드럼세탁기15KG",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "드럼세탁기21KG",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "드럼세탁기10KG",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "일반세탁기와드럼세탁기",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "일반세탁기드럼세탁기",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "일반세탁기 청소",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "일반세탁기 통세척",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "일반세탁기 세제",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "일반세탁기 드럼세탁기",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "일반세탁기 선반",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "일반세탁기 15kg",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "일반 세탁기 청소 방법",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "일반세탁기 10kg",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "일반세탁기 사용법",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "일반세탁기 추천",
+   "seed": "세탁기",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "통돌이 세탁기 청소",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "통돌이 세탁기 통세척",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "통돌이세탁기 15kg",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "삼성 통돌이 세탁기 19kg",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "통돌이세탁기 10kg",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "통돌이 세탁기 찌꺼기",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "통돌이세탁기 선반",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "통돌이 세탁기 청소비용",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "lg 통돌이 세탁기 17kg",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "lg 통돌이 세탁기 19kg",
+   "seed": "세탁기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "냉장고900리터",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "냉장고500리터",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "신혼냉장고",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "원룸냉장고",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "냉장고영어로",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "양문형냉장고",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "냉장고200리터",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "냉장고 900리터 1등급",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고 900리터 양문형",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고 900리터 가격",
+   "seed": "냉장고",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고 900리터 lg",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고 900리터 무게",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고 900리터 2도어",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고900리터 소비전력",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고 900리터 4도어 1등급",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고 900리터 사이즈",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고 900리터 이상",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "lg 냉장고 500리터 2도어",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고 500리터 양문형",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고 500리터 2도어",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고 500리터 가격",
+   "seed": "냉장고",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고 500리터 4도어",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고 500리터 1등급",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고 500리터 중고",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고 500리터 크기",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고 500리터 무게",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "냉장고 500리터 비교",
+   "seed": "냉장고",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "신혼 냉장고 추천",
+   "seed": "냉장고",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "신혼 냉장고 용량",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "신혼 냉장고 lg",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "신혼 냉장고 가격",
+   "seed": "냉장고",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "신혼 냉장고 키친핏",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "신혼 냉장고 4도어",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "신혼 냉장고 2도어",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "신혼 냉장고 크기",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "신혼 냉장고 사이즈",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "신혼 냉장고 세탁기",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "원룸 냉장고 소음",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "원룸 냉장고 고장",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "원룸 냉장고 추천",
+   "seed": "냉장고",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "원룸 냉장고 온도",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "원룸 냉장고 가격",
+   "seed": "냉장고",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "원룸 냉장고 교체",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "원룸 냉장고 크기",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "원룸 냉장고 소리",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "원룸 냉장고 중고",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "원룸 냉장고 고장 집주인",
+   "seed": "냉장고",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "에어컨",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "에어컨추천",
+   "seed": "에어컨",
+   "buy": true,
+   "depth": 1
+  },
+  {
+   "kw": "중고에어컨",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "에어컨할인",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "2IN1에어컨",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "벽걸이에어컨",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "에어컨중고",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "에어컨설치",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "에어컨 추천 2in1",
+   "seed": "에어컨",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "에어컨 추천 1등급",
+   "seed": "에어컨",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "에어컨 추천 30평",
+   "seed": "에어컨",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "벽걸이중고에어컨",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "청주중고에어컨",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "천안중고에어컨",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "중고에어컨설치비용",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "중고에어컨매입가격",
+   "seed": "에어컨",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "중고에어컨판매",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "중고에어컨매입",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "에어컨 할인 시기",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "에어컨 할인 행사",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "에어컨 할인 매장",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "에어컨 할인 기간",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "2IN1에어컨 1등급",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "2in1 에어컨 중고",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "2in1 에어컨 커버",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "삼성 2in1 에어컨 무풍",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "2in1 에어컨 청소 비용",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "2in1 에어컨 렌탈",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "2in1 에어컨 설치비",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "2in1 에어컨 청소",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "삼성 2in1 에어컨 1등급",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "2in1 에어컨 설치",
+   "seed": "에어컨",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 구운계란",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "전기밥솥",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "전기밥솥 3인용",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "전기밥솥 6인용",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "전기밥솥 10인용",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "전기밥솥 추천",
+   "seed": "전기밥솥",
+   "buy": true,
+   "depth": 1
+  },
+  {
+   "kw": "전기밥솥 누룽지백숙",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "쿠쿠 전기밥솥",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "콩나물밥 전기밥솥",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "쿠첸 전기밥솥",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "전기밥솥 구운계란 만들기",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 구운계란 취사",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 구운계란 보관",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 구운계란 시간",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 구운계란 물양",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 구운계란 소금",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 구운계란 고압찜",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 구운계란 탄내",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 구운계란 영양찜",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 구운계란 보온",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 수육",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "쿠쿠 전기밥솥 6인용",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "쿠쿠 전기밥솥 10인용",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 고구마",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 3인용 추천",
+   "seed": "전기밥솥",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 3인용 4인용",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 3인용 밥하기",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 3인용 물양",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 3인용 6인용",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 6인용 추천",
+   "seed": "전기밥솥",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 6인용 10인용",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 6인용 내솥",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 6인용 쿠쿠",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 6인용 올스텐",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 6인용 가격",
+   "seed": "전기밥솥",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 6인용 10인용 차이",
+   "seed": "전기밥솥",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 6인용 스텐 내솥",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 6인용 삼계탕",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 6인용 ih",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 10인용 올스텐",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 10인용 추천",
+   "seed": "전기밥솥",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 10인용 내솥",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 10인용 ih",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 10인용 가격",
+   "seed": "전기밥솥",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 10인용 스텐",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 10인용 전력",
+   "seed": "전기밥솥",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기밥솥 10인용 6인용 비교",
+   "seed": "전기밥솥",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "안마의자중고",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "안마의자리퍼",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "안마의자가성비",
+   "seed": "안마의자",
+   "buy": true,
+   "depth": 1
+  },
+  {
+   "kw": "미니안마의자",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "안마의자가격",
+   "seed": "안마의자",
+   "buy": true,
+   "depth": 1
+  },
+  {
+   "kw": "허리안마의자",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "휴대용안마의자",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "안마의자 중고 판매",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자 중고 매입 업체",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자 중고 매입",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자 중고 가격",
+   "seed": "안마의자",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자 중고 수거",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자 중고 판매 업체",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자 중고 파는법",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자 중고 매장",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자 중고 구매",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자 중고 이동",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자 리퍼 제품",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자 리퍼 매장",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자 리퍼 구매",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자 리퍼 뜻",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자 리퍼 렌탈",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자 가성비 추천",
+   "seed": "안마의자",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자 가성비 순위",
+   "seed": "안마의자",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자 가성비 렌탈",
+   "seed": "안마의자",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "안마의자 가성비 브랜드",
+   "seed": "안마의자",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "미니 안마의자 렌탈",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니 안마의자 비교",
+   "seed": "안마의자",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "미니 안마의자 추천",
+   "seed": "안마의자",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "미니 안마의자 순위",
+   "seed": "안마의자",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "미니 안마의자 리쏘",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니 안마의자 리퍼",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니 안마의자 코지마",
+   "seed": "안마의자",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "비데",
+   "seed": "비데",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "비데구입",
+   "seed": "비데",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "수동비데",
+   "seed": "비데",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "비데렌탈",
+   "seed": "비데",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "비데설치",
+   "seed": "비데",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "필터없는비데",
+   "seed": "비데",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "비데렌탈가격비교",
+   "seed": "비데",
+   "buy": true,
+   "depth": 1
+  },
+  {
+   "kw": "휴대용비데",
+   "seed": "비데",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "비데 구입 추천",
+   "seed": "비데",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "비데 구입 렌탈",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "비데구입 자가설치",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "비데 구입 설치",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "비데 구입 렌탈 차이",
+   "seed": "비데",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "비데 구입 시 고려사항",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "비데구입 쿠쿠",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "비데 구입 렌탈 비교",
+   "seed": "비데",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "비데 구입 가격",
+   "seed": "비데",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "수동 비데 설치",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "수동 비데 추천",
+   "seed": "비데",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "수동 비데 호스 쓰는법",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "수동 비데 사용법",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "수동비데 구입하는법",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "수동비데 사용방법",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "수동비데 비교",
+   "seed": "비데",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "수동 비데 버리는 방법",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "수동비데 떼는 법",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "비데렌탈사은품",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "정수기비데렌탈",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "비데렌탈추천",
+   "seed": "비데",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "비데렌탈구매",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "쿠쿠 비데 설치 방법",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "비데 설치 공구",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "비데 설치 부품",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "비데 설치 방법 셀프",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "비데 설치 업체",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "비데 설치 가격",
+   "seed": "비데",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "비데 설치 시간",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "비데설치 변기사이즈",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "비데설치 현금",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "비데 설치 셀프",
+   "seed": "비데",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "음식물처리기",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "미생물음식물처리기",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "음식물처리기분쇄",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "씽크대음식물처리기",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "음식물처리기단점",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "가정용음식물처리기",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "음식물처리기렌탈",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "미생물 음식물처리기 냄새",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미생물 음식물처리기 지원금",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미생물 음식물처리기 비교",
+   "seed": "음식물처리기",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "미생물 음식물처리기 진흙",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미생물음식물처리기 바나나껍질",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미생물 음식물처리기 원리",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미생물 음식물처리기 곰팡이",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미생물 음식물처리기 렌탈",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미생물 음식물처리기 만들기",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미생물 음식물처리기 매운음식",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "음식물처리기 분쇄 후 쓰레기",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "음식물처리기 분쇄 싱크대",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "음식물처리기 분쇄 건조",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "음식물처리기 분쇄 미생물 차이",
+   "seed": "음식물처리기",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "음식물처리기 분쇄 불법",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "음식물처리기 분쇄 시간",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "음식물 처리기 분쇄 버리는방법",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "음식물 처리기 분쇄 미생물",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "음식물처리기 분쇄 후",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "음식물처리기 분쇄 후 처리",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "씽크대 음식물처리기 불법",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "씽크대음식물처리기 막혔을때",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "씽크대음식물처리기 사용방법",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "씽크대음식물처리기 건조",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "씽크대 음식물처리기 미생물",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "씽크대음식물처리기 청소",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "씽크대 음식물처리기 냄새",
+   "seed": "음식물처리기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "서큘레이터",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "신일 서큘레이터",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "서큘레이터 선풍기",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "에어서큘레이터",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "서큘레이터 뜻",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "무선 서큘레이터",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "미니 서큘레이터",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "루메나 서큘레이터",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "파세코 서큘레이터",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "한일 서큘레이터",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "서큘레이터 코나에코홈",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "신일 서큘레이터 분해",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "서큘레이터 청소",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "신일 서큘레이터 청소",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "신일 서큘레이터 리모컨",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "신일 서큘레이터 as",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "서큘레이터 선풍기 차이",
+   "seed": "서큘레이터",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "서큘레이터 추천",
+   "seed": "서큘레이터",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "신일 서큘레이터 고장",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "신일 서큘레이터 조립",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "신일 서큘레이터 선풍기",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "신일 서큘레이터 청소 분해",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "신일 서큘레이터 소음",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "신일 서큘레이터 1+1",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "서큘레이터 선풍기 비교",
+   "seed": "서큘레이터",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "서큘레이터 선풍기 날개",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "서큘레이터 선풍기 무소음",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "서큘레이터 선풍기 가격 비교",
+   "seed": "서큘레이터",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "서큘레이터 선풍기 청소",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "서큘레이터 선풍기 추천",
+   "seed": "서큘레이터",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "서큘레이터 선풍기 전기세",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "신일 에어서큘레이터 분해",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "에어 서큘레이터 뜻",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "에어서큘레이터 1+1",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "에어서큘레이터 청소법",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "에어 서큘레이터 효과",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "에어서큘레이터 버리는법",
+   "seed": "서큘레이터",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "전기포트 세척",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "여행용 전기포트",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "전기포트 추천",
+   "seed": "전기포트",
+   "buy": true,
+   "depth": 1
+  },
+  {
+   "kw": "발뮤다 전기포트",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "드롱기 전기포트",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "접이식 전기포트",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "키친아트 전기포트",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "미니 전기포트",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "쿠쿠 전기포트",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "전기포트 여행용",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 버리는법",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 라면",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 유리",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 햇반",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 1l",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "여행용 전기포트 비교",
+   "seed": "전기포트",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 미니",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 세척 식초",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 세척 구연산",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 세척 베이킹소다",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 세척 세제",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 세척 과탄산소다",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 세척 다이소",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 세척 주기",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 세척 주의사항",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 세척 사과식초",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "여행용 전기포트 햇반",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "여행용 전기포트 스텐",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "여행용 전기포트 추천",
+   "seed": "전기포트",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "여행용 전기포트 내돈내산",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "여행용 전기포트 접이식",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "여행용 전기포트 프리볼트",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "여행용 전기포트 기내",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "여행용 전기포트 국산",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "여행용 전기포트 세척",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 추천 순위",
+   "seed": "전기포트",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 추천 올스텐",
+   "seed": "전기포트",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 추천 유리",
+   "seed": "전기포트",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 추천 스텐",
+   "seed": "전기포트",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 추천 내돈내산",
+   "seed": "전기포트",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "전기포트 추천 1리터",
+   "seed": "전기포트",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "발뮤다 전기포트 블랙",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "발뮤다 전기포트 녹",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "발뮤다 전기포트 연마제",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "발뮤다 전기포트 as",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "발뮤다 전기포트 용량",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "발뮤다 전기포트 실버",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "발뮤다 전기포트 세척",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "발뮤다 전기포트 사용방법",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "발뮤다 전기포트 뚜껑",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "발뮤다 전기포트 고장",
+   "seed": "전기포트",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "믹서기",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "소형믹서기",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "대형믹서기",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "미니믹서기",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "믹서기추천",
+   "seed": "믹서기",
+   "buy": true,
+   "depth": 1
+  },
+  {
+   "kw": "소형믹서기 버리는법",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "소형 믹서기 버리기",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "소형 믹서기 유리",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "소형 믹서기 국산",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "소형 믹서기 가격",
+   "seed": "믹서기",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "소형 믹서기 닌자",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "소형 믹서기 순위",
+   "seed": "믹서기",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "소형 믹서기 분쇄기",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "소형믹서기 비교",
+   "seed": "믹서기",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "소형 믹서기 추천 유리",
+   "seed": "믹서기",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "대형믹서기 청림가전",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "대형 믹서기 추천",
+   "seed": "믹서기",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "대형 믹서기 대용량",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "대형 믹서기 유리",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "대형 믹서기 업소용",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "대형믹서기 버리는법",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "대형 믹서기 마늘 이유식",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니 믹서기 유리",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니 믹서기 소형",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니믹서기 국산",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니믹서기 초퍼",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니 믹서기 이유식",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니믹서기 비교",
+   "seed": "믹서기",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "미니믹서기 버리는방법",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니믹서기 가격",
+   "seed": "믹서기",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "미니믹서기 추천",
+   "seed": "믹서기",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "미니믹서기 분리수거",
+   "seed": "믹서기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니믹서기추천",
+   "seed": "믹서기",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "오븐",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "오븐추천",
+   "seed": "오븐",
+   "buy": true,
+   "depth": 1
+  },
+  {
+   "kw": "광파오븐컨벡션오븐",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "제과제빵오븐",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "오븐요리",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "오븐렌지",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "생선구이오븐",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "오븐기능",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "오븐 추천 순위",
+   "seed": "오븐",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "오븐추천 식빵",
+   "seed": "오븐",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "오븐 추천 내돈내산",
+   "seed": "오븐",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "오븐 추천 삼성",
+   "seed": "오븐",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "광파오븐컨벡션오븐 치킨",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "제과제빵 오븐 가정용",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "제과제빵 오븐 추천",
+   "seed": "오븐",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "제과제빵 오븐 업소용",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "제과제빵오븐 끄는법",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "제과제빵 오븐 종류",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "제과제빵 오븐 중고",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "오븐 요리 추천",
+   "seed": "오븐",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "오븐 요리 종류",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "오븐 요리 책",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "오븐요리 감자",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "오븐요리 손님",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "오븐 요리 그릇",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "오븐요리 삼겹살",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "오븐요리 빵",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "오븐 요리 라자냐",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "오븐요리 판매",
+   "seed": "오븐",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "제빙기",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "휴대용제빙기",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "제빙기추천",
+   "seed": "제빙기",
+   "buy": true,
+   "depth": 1
+  },
+  {
+   "kw": "미니제빙기",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "제빙기50KG",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "제빙기임대",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "카페제빙기",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "제빙기중고",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 1
+  },
+  {
+   "kw": "휴대용 제빙기 추천",
+   "seed": "제빙기",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "휴대용 제빙기 청소",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "휴대용 제빙기 캠핑용",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "휴대용 제빙기 가정용",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "휴대용 제빙기 사용법",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "휴대용 제빙기 소형",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "제빙기 추천 휴대용",
+   "seed": "제빙기",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "미니 제빙기 청소",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니 제빙기 렌탈",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니제빙기 청소하는법",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니제빙기 고장",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니제빙기 사용법",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니 제빙기 추천",
+   "seed": "제빙기",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "미니제빙기 청소방법",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니 제빙기 가정용",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니 제빙기 가방",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "미니제빙기 냉매보충",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "제빙기 50kg 사이즈",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "제빙기 50kg 추천",
+   "seed": "제빙기",
+   "buy": true,
+   "depth": 2
+  },
+  {
+   "kw": "제빙기 50kg 수냉식",
+   "seed": "제빙기",
+   "buy": false,
+   "depth": 2
+  },
+  {
+   "kw": "제빙기 50kg 중고",
+   "seed": "제빙기",
    "buy": false,
    "depth": 2
   }

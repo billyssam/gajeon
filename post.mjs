@@ -1,16 +1,63 @@
 import { SPECS, GENERIC } from "./specs.mjs";
+import { DETAIL } from "./detail.mjs";
 
 // 키워드를 사람이 묻는 문장으로 바꾼다. 🔴 억지로 만들지 않는다 —
-//    질문으로 읽히지 않는 키워드는 버린다(빈 FAQ가 지어낸 FAQ보다 낫다).
+//    질문으로 읽히지 않는 키워드는 버린다(빈 FAQ가 깨진 FAQ보다 낫다).
+//    🔴 2026-09-13: 생성된 76개 질문을 전부 읽고 고쳤다. 깨지는 유형이 여섯 가지였다 —
+//    씨드 중복("로봇청소기 로봇청소기는"), 조사("인덕션는"), 치환 잔해("기능와(과) 는"),
+//    브랜드명(답할 수 없는 질문이 된다), 다른 제품군(야채 건조기), 붙어 있는 키워드("김치냉장고가격").
+
+// 받침 유무로 조사를 고른다. 한글이 아니면 null — 그런 단어는 질문으로 안 만든다.
+function jong(word) {
+  const ch = word.trim().slice(-1);
+  const c = ch.charCodeAt(0);
+  if (c < 0xAC00 || c > 0xD7A3) return null;
+  return (c - 0xAC00) % 28 !== 0;
+}
+function josa(word, withJong, withoutJong) {
+  const j = jong(word);
+  return j === null ? null : (j ? withJong : withoutJong);
+}
+function 은는(w) { const j = josa(w, "은", "는"); return j && w + j; }
+function 와과(w) { const j = josa(w, "과", "와"); return j && w + j; }
+
+// 브랜드·모델명이 들어간 검색어는 질문으로 만들지 않는다.
+// 브랜드를 물어 놓고 일반론으로 답하면 그건 낚시다.
+const BRAND = /lg|엘지|삼성|위니아|딤채|쿠쿠|쿠첸|로보락|로борock|roborock|닌자|ninja|신일|샤오미|xiaomi|다이슨|dyson|드리미|dreame|에코백스|테팔|필립스|코웨이|청호|sk매직|위닉스|winix|캐리어|한일|보국|리홈|휴롬|드롱기|네스프레소|브레빌|일리|미쿠|클라쎄|디오스|비스포크|그랑데|오브제/i;
+// 이름은 비슷하지만 다른 제품군인 검색어 — 이 글이 답할 수 있는 범위가 아니다.
+const OTHER = /야채|과일|식품|건조식품|초음파\s*세척|안경|생수통|차량용|자동차|반려동물\s*드라이|천연/i;
+// 🔴 수식어는 "버릴 것"이 아니라 "쓸 것"만 정한다. 블랙리스트로는 끝이 없었다 —
+//    "렌지추천 인덕션", "요리들 에어프라이어", "용 냄비 세트 인덕션" 이 그렇게 새어 나왔다.
+//    아래는 제품의 형태·크기·방식을 가리키는 말들이다. 그 밖의 말은 수식어로 쓰지 않는다.
+const ALLOW = /^(미니|소형|중형|대형|대용량|소용량|슬림|벽걸이|스탠드형|뚜껑형|빌트인|프리스탠딩|무선|유선|휴대용|가정용|업소용|원룸|1인|2인|물걸레|직수|저수조|히트펌프|하이브리드|하이라이트|전자동|반자동|캡슐|수동|자동|가열식|기화식|압축식|저소음|겸용|\d+인용|\d+구)$/i;
+
 function toQuestion(kw, seed) {
-  const k = kw.replace(/\s+/g, " ").trim();
-  if (/차이/.test(k))       return `${k.replace(/\s*차이\s*/, "와(과) ")}는 뭐가 다른가요?`;
-  if (/비교/.test(k))       return `${k.replace(/\s*비교\s*/, "")}, 어떤 기준으로 비교해야 하나요?`;
-  if (/가격|얼마/.test(k))  return `${k.replace(/\s*(가격비교|가격|얼마)\s*/, "")}는 어느 정도 값을 봐야 하나요?`;
-  if (/가성비/.test(k))     return `가성비로 고른다면 ${seed}에서 뭘 포기해도 되나요?`;
-  if (/순위/.test(k))       return `${seed} 순위는 그대로 믿어도 되나요?`;
-  if (/추천/.test(k))       return `${k.replace(/\s*추천\s*/, "")} ${seed}는 어떤 사람에게 맞나요?`.replace(/\s+/g, " ");
-  if (/\d+\s*인용|\d+구|\d+L/.test(k)) return `${k}, 우리 집에 맞는 크기인가요?`;
+  let k = kw.replace(/\s+/g, " ").trim();
+  if (BRAND.test(k) || OTHER.test(k)) return null;
+  // 붙어 있는 키워드를 띄운다: "김치냉장고가격" → "김치냉장고 가격"
+  k = k.split(seed).join(` ${seed} `).replace(/\s+/g, " ").trim();
+
+  // "A B 차이" — 비교 대상이 둘일 때만 질문이 된다. 하나뿐이면 무엇과 비교하는지 알 수 없다.
+  if (/차이/.test(k)) {
+    // 양쪽 다 제품 이름이어야 한다. "기능"·"냄비" 같은 두 글자 속성어가 비교 대상으로 들어가면
+    // "스타일러와 기능은 뭐가 다른가요?" 같은 문장이 나온다 — 세 글자 이상만 받는다.
+    const parts = k.replace(/차이/g, "").trim().split(" ").filter(w => w && w.length > 2);
+    const uniq = [...new Set(parts)];
+    if (uniq.length !== 2) return null;
+    const a = 와과(uniq[0]), b = 은는(uniq[1]);
+    return a && b ? `${a} ${b} 뭐가 다른가요?` : null;
+  }
+
+  // 수식어는 허용 목록에 있는 것 하나만 쓴다. 없으면 씨드 자체가 주어다.
+  const mod = k.split(" ").find(w => w !== seed && ALLOW.test(w));
+  const subject = mod ? `${mod} ${seed}` : seed;
+
+  if (/비교/.test(k))      { const w = 은는(subject); return w && `${w} 어떤 기준으로 비교해야 하나요?`; }
+  if (/가격|얼마/.test(k)) { const w = 은는(subject); return w && `${w} 어느 정도 값을 봐야 하나요?`; }
+  if (/가성비/.test(k))    return `가성비로 고른다면 ${seed}에서 뭘 포기해도 되나요?`;
+  if (/순위/.test(k))      return `${seed} 순위는 그대로 믿어도 되나요?`;
+  if (/추천/.test(k))      { const w = 은는(subject); return w && `${w} 어떤 사람에게 맞나요?`; }
+  if (/\d+\s*인용|\d+\s*구|\d+\s*L/i.test(k)) { const w = 은는(subject); return w && `${w} 우리 집에 맞는 크기인가요?`; }
   return null;
 }
 
@@ -28,8 +75,14 @@ export function buildPost(group, allGroups, U) {
     if (faqs.length >= 6) break;
   }
 
+  // 🔴 제품군별 상세가 없으면 멈춘다. 짧은 글을 조용히 발행하면 색인에서 버려진다.
+  const det = DETAIL[seed];
+  if (!det) throw new Error(`detail.mjs 에 "${seed}" 가 없다`);
+  if (det.why.length !== spec.axes.length)
+    throw new Error(`"${seed}" why ${det.why.length}개 ≠ axes ${spec.axes.length}개`);
+
   const axes = spec.axes.map(([t, d], i) =>
-    `<h3>${i + 1}. ${esc(t)}</h3>\n<p>${esc(d)}</p>`).join("\n");
+    `<h3>${i + 1}. ${esc(t)}</h3>\n<p>${esc(d)}</p>\n<p class="why">${esc(det.why[i])}</p>`).join("\n");
   const toc = spec.axes.map(([t]) => `<li>${esc(t)}</li>`).join("");
 
   const faqHtml = faqs.length ? `
@@ -69,13 +122,17 @@ ${axes}
 </ul>
 
 <h2>사기 전 확인할 것</h2>
-<p>매장이나 상세페이지에서 이 네 가지는 직접 확인하는 편이 좋습니다. 설명에 잘 안 적히거나 작게 적히는 값들입니다.</p>
+<p>${esc(seed)}에서는 특히 이 ${det.checks.length}가지를 직접 확인하는 편이 좋습니다.
+상세페이지에 잘 안 적히거나 작게 적혀서, 받고 나서야 알게 되는 값들입니다.</p>
 <ol>
-<li>놓을 자리의 <b>가로·세로·높이</b>와 문이 열리는 공간까지 재 두기</li>
-<li><b>소모품 값과 교체 주기</b> — 본체 값이 싸고 소모품이 비싼 구조가 흔합니다</li>
-<li><b>가장 낮은 단계의 소음</b> — 최대 단계 수치만 적힌 경우가 많습니다</li>
-<li><b>반품 조건</b> — 설치형 제품은 설치 후 반품이 어려운 경우가 있습니다</li>
+${det.checks.map(c => `<li>${esc(c)}</li>`).join("\n")}
 </ol>
+
+<h2>자주 나오는 실패</h2>
+<p>같은 실수가 반복됩니다. 아래 세 가지에 해당하지 않는지만 확인해도 큰 실패는 피할 수 있습니다.</p>
+<ul>
+${det.wrong.map(w => `<li>${esc(w)}</li>`).join("\n")}
+</ul>
 
 <h2>흔한 오해 하나</h2>
 <div class="note">${esc(spec.myth)}</div>

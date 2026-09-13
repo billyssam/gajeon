@@ -35,3 +35,14 @@ git push -q -u origin gh-pages 2>&1 | tail -2
 echo "올림 · ${PAGES}장 → gh-pages"
 
 # 올렸으면 알린다. 안 알리면 발견까지 몇 주가 더 걸린다.
+
+cd "$HERE" && "$NODE" notify-index.mjs
+
+# 편별 실측을 콘솔로 밀어 올린다. 🔴 배포와 같은 순간의 값이어야 화면이 거짓말을 안 한다.
+if [ -f dist/stats.json ] && command -v gh >/dev/null; then
+  SHA=$(gh api repos/billyssam/gonghak-ops/contents/blog-stats.json --jq .sha 2>/dev/null)
+  ARGS=(-f message="stats: $(date '+%m-%d %H:%M')" -f content="$(base64 -i dist/stats.json | tr -d '\n')")
+  [ -n "$SHA" ] && ARGS+=(-f sha="$SHA")
+  gh api -X PUT repos/billyssam/gonghak-ops/contents/blog-stats.json "${ARGS[@]}" --jq '.content.name' \
+    && echo "실측 올림 → 콘솔" || echo "실측 올리기 실패(한도?) — 사이트는 이미 올라갔다"
+fi

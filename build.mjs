@@ -2,6 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { makeTitle, slugify, groupBySeed, YEAR } from "./writer.mjs";
 import { buildPost } from "./post.mjs";
+import { SPECS } from "./specs.mjs";
+import { DETAIL } from "./detail.mjs";
 
 const OUT = "dist", DATA = "data";
 const SITE = "가전 고르는 기준";
@@ -51,6 +53,8 @@ li{margin-bottom:var(--s2)}
 .rel a{display:block;padding:var(--s1) 0;font-size:15px}
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
+.why{border-left:2px solid var(--line);padding-left:var(--s3);
+  font-size:15px;color:var(--ink2);margin:0 0 var(--s4)}
 .note{background:var(--band);border-left:3px solid var(--ink3);padding:var(--s3);
   font-size:15px;color:var(--ink2);margin:0 0 var(--s3)}
 footer{border-top:1px solid var(--line);padding:var(--s4) 0 var(--s6);
@@ -58,10 +62,16 @@ footer{border-top:1px solid var(--line);padding:var(--s4) 0 var(--s6);
 @media(max-width:640px){body{font-size:16px}h1{font-size:24px}h2{font-size:19px}.lede{font-size:17px}}
 `;
 
+// 애드센스 심사·게재 코드. 🔴 화면으로 읽지 않고 복사 버튼 → 클립보드로 받은 값이다(2026-09-13).
+//    심사는 이 스크립트가 사이트에 실제로 있어야 시작된다.
+const ADS_CLIENT = "ca-pub-8092073462948926";
+const ADS = `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADS_CLIENT}" crossorigin="anonymous"></script>`;
+
 export function page({ title, desc, body, up = "" }) {
   return `<meta name="description" content="${esc(desc)}">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title>
+${ADS}
 <style>${CSS}</style>
 <header><div class="wrap"><b><a href="${up || "./"}">${SITE}</a></b><span>${TAGLINE}</span></div></header>
 <main><div class="wrap">${body}</div></main>
@@ -74,7 +84,11 @@ fs.mkdirSync(OUT, { recursive: true });
 const kwFiles = fs.readdirSync(DATA).filter(f => /^keywords-/.test(f)).sort();
 if (!kwFiles.length) { console.error("키워드 파일이 없다 — keywords.mjs 를 먼저 돌려라"); process.exit(1); }
 const kw = JSON.parse(fs.readFileSync(path.join(DATA, kwFiles.at(-1)), "utf-8"));
-const groups = groupBySeed(kw.rows);
+// 🔴 씨드 수확과 발행을 분리한다. 키워드는 27개 제품군을 모으지만,
+//    글은 SPECS·DETAIL 이 둘 다 준비된 것만 나간다 — 준비 안 된 씨드가 빈 글을 만들지 않게.
+const groups = groupBySeed(kw.rows).filter(g => SPECS[g.seed] && DETAIL[g.seed]);
+const skipped = groupBySeed(kw.rows).filter(g => !(SPECS[g.seed] && DETAIL[g.seed]));
+if (skipped.length) console.log(`대기 중인 제품군 ${skipped.length}: ${skipped.map(g => g.seed).join(" ")}`);
 
 const posts = [];
 for (const g of groups) {
@@ -106,7 +120,33 @@ const urls = ["", ...posts.map(p => encodeURI(p.slug) + "/")]
 fs.writeFileSync(path.join(OUT, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
 fs.writeFileSync(path.join(OUT, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`);
+// IndexNow 키 파일 — 이 파일이 사이트에 있어야 제출이 인증된다(계정 없이 되는 유일한 경로)
+if (fs.existsSync(".indexnow-key")) {
+  const key = fs.readFileSync(".indexnow-key", "utf-8").trim();
+  if (key) fs.writeFileSync(path.join(OUT, key + ".txt"), key + "\n");
+}
 if (fs.existsSync("public")) for (const f of fs.readdirSync("public")) fs.copyFileSync(path.join("public", f), path.join(OUT, f));
+
+// 🔴 게이트 — 짧은 글은 색인에서 버려진다. 조용히 발행하지 않고 여기서 멈춘다.
+const MIN = 1700;
+const thin = posts.filter(p => p.chars < MIN).map(p => `${p.seed} ${p.chars}자`);
+if (thin.length) { console.error(`너무 짧다(${MIN}자 미만): ${thin.join(", ")}`); process.exit(1); }
+
+// 편별 실측을 파일로 남긴다 — 콘솔 상황판이 이걸 읽는다. 추정값을 쓰지 않는다.
+{
+  const stats = {
+    measured_at: new Date().toISOString(),
+    site: SITE_URL,
+    target_posts: 20,          // 애드센스 심사 기준
+    target_chars: 2000,
+    posts: posts.map(p => ({
+      seed: p.seed, slug: p.slug, title: p.title,
+      chars: p.chars, faqs: p.faqs,
+      kws: (groups.find(g => g.seed === p.seed)?.kws || []).length,
+    })).sort((a, b) => a.chars - b.chars),
+  };
+  fs.writeFileSync(path.join(OUT, "stats.json"), JSON.stringify(stats, null, 1) + "\n");
+}
 
 const chars = posts.reduce((a, p) => a + p.chars, 0);
 console.log(`dist · ${posts.length}편 · 평균 ${Math.round(chars / posts.length)}자 · 사이트맵 ${posts.length + 1}개`);
