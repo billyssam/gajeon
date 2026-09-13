@@ -81,7 +81,10 @@ export function buildPost(group, allGroups, U) {
     const a = faqAnswer({ q, kw }, seed, spec);
     if (!a || faqs.some(f => f.a === a)) continue;
     faqs.push({ q, kw, a });
-    if (faqs.length >= 6) break;
+    // 🔴 2026-09-13 대표: "승인 전까지 모든걸 다 세팅해놔."
+    //    실측: 20편 평균 1,814자로 목표 2,000자에 미달 — 애드센스 심사에서 걸리는 자리다.
+    //    FAQ 를 늘려 채운다. **검색어에서 뽑은 것만** 쓰므로 지어내는 게 아니다(규정 E1).
+    if (faqs.length >= 8) break;
   }
 
   // 🔴 제품군별 상세가 없으면 멈춘다. 짧은 글을 조용히 발행하면 색인에서 버려진다.
@@ -126,7 +129,9 @@ ${axes}
 <h2>${esc(seed)}, 우리 집은 어느 쪽인가</h2>
 <p>같은 ${esc(seed)}라도 조건이 다르면 봐야 할 항목이 달라집니다. 해당하는 줄만 보셔도 됩니다.</p>
 <ul>
-${[[2, "혼자 살거나 공간이 좁다면"], [1, "가족이 많거나 매일 쓴다면"], [0, "예산을 줄여야 한다면"]]
+${[[2, "혼자 살거나 공간이 좁다면"], [1, "가족이 많거나 매일 쓴다면"], [0, "예산을 줄여야 한다면"],
+   [3, "관리에 손이 덜 가길 바란다면"], [4, "오래 쓸 생각이라면"]]
+  .filter(([i]) => spec.axes[i])
   .map(([i, when]) => {
     const ax = spec.axes[i] || spec.axes[0];
     // 🔴 설명을 템플릿으로 쓰지 않는다 — 그 제품군 축의 실제 설명 첫 문장을 끌어온다.
@@ -143,6 +148,7 @@ ${esc(spec.axes[0][0])}처럼 크게 적히는 값과 달리, 아래는 받고 �
 ${det.checks.map(c => `<li>${esc(c)}</li>`).join("\n")}
 </ol>
 
+${U.광고자리 ? U.광고자리("본문중간") : ""}
 <h2>자주 나오는 실패</h2>
 <p>${esc(seed)}에서 같은 실수가 반복됩니다. ${det.wrong.length}가지에 해당하지 않는지만 봐도 큰 실패는 피합니다.</p>
 <ul>
@@ -158,6 +164,7 @@ ${det.wrong.map(w => `<li>${esc(w)}</li>`).join("\n")}
 ${esc(spec.one)}</p>
 ${bridge(seed, esc)}
 ${faqHtml}
+${U.광고자리 ? U.광고자리("글끝") : ""}
 ${relHtml}
 `;
   const chars = body.replace(/<[^>]+>/g, "").replace(/\s+/g, "").length;

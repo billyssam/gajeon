@@ -109,6 +109,28 @@ const COUPANG = `<div class="cp"><script src="https://ads-partners.coupang.com/g
 const ADS_CLIENT = "ca-pub-8092073462948926";
 const ADS = `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADS_CLIENT}" crossorigin="anonymous"></script>`;
 
+// 🔴🔴 2026-09-13 대표: "승인 전까지 모든걸 다 세팅해놔. 승인 시 해야하는것만 입히면
+//    될 수 있게 구성하면 되잖아."
+//    승인이 나면 애드센스에서 **광고 단위**를 만들고 슬롯 ID 를 받는다.
+//    그때 아래 두 줄에 ID 만 채우면 전 편에 광고가 들어간다 — 코드는 더 안 고친다.
+//    비어 있으면 아무것도 내보내지 않는다. 빈 광고 자리는 규정 B3(얇은 페이지) 위반이고
+//    보기에도 흉하다. "미구현은 성공을 흉내내지 않는다".
+export const ADS_SLOTS = {
+  본문중간: "",   // ← 승인 뒤 여기에 슬롯 ID (예: "1234567890")
+  글끝: "",       // ←
+};
+
+// 규정 B2 — 메뉴·내비게이션으로 오인하게 두지 않는다. 본문 안·글 끝만 쓴다.
+// 규정 B3 — 개인정보처리방침·문의·소개에는 넣지 않는다(글 페이지에서만 부른다).
+export function 광고자리(자리) {
+  const id = ADS_SLOTS[자리];
+  if (!id) return "";
+  return `\n<div class="adbox"><span class="adlab">광고</span>`
+    + `<ins class="adsbygoogle" style="display:block" data-ad-client="${ADS_CLIENT}"`
+    + ` data-ad-slot="${id}" data-ad-format="auto" data-full-width-responsive="true"></ins>`
+    + `<script>(adsbygoogle=window.adsbygoogle||[]).push({});</script></div>\n`;
+}
+
 // 🔴 2026-09-13 실측: 발행된 24쪽 전부 doctype 이 없어 브라우저가 **쿼크 모드**로 그렸다
 //    (document.compatMode === "BackCompat"). 박스 모델과 상속 규칙이 달라져 조판이 조용히 틀어진다.
 //    lang·canonical·og 도 없었다 — 한국어인지, 정본 주소가 뭔지 검색엔진이 알 길이 없었다.
@@ -181,7 +203,7 @@ groups.forEach((g, i) => { g.variant = i % 4; });
 
 const posts = [];
 for (const g of groups) {
-  const post = buildPost(g, groups, { esc, n, makeTitle, slugify, YEAR });
+  const post = buildPost(g, groups, { esc, n, makeTitle, slugify, YEAR, 광고자리 });
   const dir = path.join(OUT, slugify(g.seed));
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, "index.html"),

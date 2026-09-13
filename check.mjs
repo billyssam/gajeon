@@ -97,6 +97,23 @@ R("B1", MUST.every(m => dirs.includes(m)), `필수 페이지 ${MUST.join("·")}(
   const bad = posts.filter(d => html(d).includes(CP) && chars(d) < MIN_CHARS);
   R("B3", bad.length === 0, `${MIN_CHARS}자 미만 글에 제휴 배너 없음(걸린 곳: ${list(bad)})`);
 }
+// B6 광고 슬롯은 **글 페이지에만**. 정책·문의·소개·홈에는 안 들어간다
+//    🔴 2026-09-13 대표: "승인 전까지 모든걸 다 세팅해놔. 승인 시 해야하는것만 입히면 될 수 있게."
+//       승인 뒤 build.mjs 의 ADS_SLOTS 에 ID 만 채우면 전 편에 광고가 들어간다.
+//       그때 **정책 페이지에 새지 않는지**를 사람이 눈으로 확인하게 두면 안 된다 — 여기서 막는다.
+//       (승인 전에는 슬롯이 비어 있어 어디에도 안 나간다. 그것도 같이 검사한다.)
+{
+  const SLOT = 'data-ad-slot="';
+  // 정책·문의·소개(MUST) + 홈 — 여기에 슬롯이 있으면 안 된다
+  const 샌곳 = MUST.filter(d => html(d).includes(SLOT));
+  if (home.includes(SLOT)) 샌곳.push("홈");
+  R("B6", 샌곳.length === 0, `광고 슬롯이 글 페이지 밖으로 새지 않음(샌 곳: ${list(샌곳)})`);
+}
+// B7 광고가 붙는 글은 최소 분량을 넘겨야 한다(규정 B3 의 슬롯판)
+{
+  const bad = posts.filter(d => html(d).includes('data-ad-slot="') && chars(d) < MIN_CHARS);
+  R("B7", bad.length === 0, `${MIN_CHARS}자 미만 글에 광고 슬롯 없음(걸린 곳: ${list(bad)})`);
+}
 // B4 제목이 약속한 것을 본문이 준다.
 //    🔴 이 사이트는 제품을 추천하지 않는다(기준만 쓴다). 그러니 제목이 추천·순위·최저가를
 //       약속하면 본문이 그걸 줄 수 없다 — 2026-09-13 까지 20편 전부 "추천 5가지" 였다.

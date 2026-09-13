@@ -29,6 +29,10 @@ export const RULES = [
     src: "AdSense 방문 페이지 품질", gate: true },
   { id: "B5", text: "자기 광고 클릭·클릭 유도·보상 금지",
     src: "AdSense 프로그램 정책", gate: false },
+  { id: "B6", text: "광고 슬롯은 **글 페이지에만**. 정책·문의·소개·홈에 새면 안 된다",
+    src: "AdSense 프로그램 정책 + 대표 2026-09-13 \"승인 시 해야하는것만 입히면 되게\"", gate: true },
+  { id: "B7", text: "최소 분량을 못 넘긴 글에는 광고 슬롯을 넣지 않는다",
+    src: "AdSense 방문 페이지 품질", gate: true },
 
   // C. 구글 검색 스팸정책 — 어기면 색인에서 빠진다
   { id: "C1", text: "얇은 제휴 금지 — 같은 틀을 찍어낸 페이지를 만들지 않는다",
