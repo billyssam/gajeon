@@ -24,6 +24,7 @@ const CSS = `
          "Malgun Gothic",system-ui,sans-serif;
 }
 *{box-sizing:border-box}
+html,body{overflow-x:hidden}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
   font-size:17px;line-height:1.75;word-break:keep-all;-webkit-text-size-adjust:100%}
 .wrap{max-width:720px;margin:0 auto;padding:0 var(--s3)}
@@ -48,6 +49,13 @@ li{margin-bottom:var(--s2)}
 .faq{border-top:1px solid var(--line);padding-top:var(--s3);margin-top:var(--s2)}
 .faq h3{margin-top:0;font-size:16px}
 .faq p{color:var(--ink2);font-size:16px}
+/* 🔴 쿠팡 배너는 680px 고정 iframe 이다. 폰(375px)에서 그대로 두면
+   페이지 전체가 696px 로 가로 스크롤된다(실측). 배너만 제 칸 안에서 밀리게 가둔다. */
+.cp{margin-top:var(--s5);padding-top:var(--s3);border-top:1px solid var(--line);
+  overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+.cp iframe{display:block}
+.cpnote{font-size:12px;color:var(--ink3);margin:var(--s2) 0 0;line-height:1.6;
+  position:sticky;left:0}
 .rel{background:var(--band);border-radius:8px;padding:var(--s3);margin-top:var(--s5)}
 .rel b{display:block;font-size:14px;margin-bottom:var(--s2)}
 .rel a{display:block;padding:var(--s1) 0;font-size:15px}
@@ -64,6 +72,15 @@ footer{border-top:1px solid var(--line);padding:var(--s4) 0 var(--s6);
 
 // 애드센스 심사·게재 코드. 🔴 화면으로 읽지 않고 복사 버튼 → 클립보드로 받은 값이다(2026-09-13).
 //    심사는 이 스크립트가 사이트에 실제로 있어야 시작된다.
+// 쿠팡 파트너스 다이나믹 배너(카테고리 베스트 · 가전디지털). 복사 버튼으로 받은 값이다.
+// 🔴 이 배너를 넣는 글에는 **경제적 이해관계 표시가 법으로 의무**다(표시광고법).
+//    쿠팡 화면 문구 그대로: "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다."
+//    문구 없이 배너만 달면 수익금 지급이 중단될 수 있다고 쿠팡이 명시한다.
+const CP_ID = 1028910, CP_TRACK = "AF2403241";
+const COUPANG = `<div class="cp"><script src="https://ads-partners.coupang.com/g.js"><\/script>
+<script>new PartnersCoupang.G({"id":${CP_ID},"template":"carousel","trackingCode":"${CP_TRACK}","width":"680","height":"140","tsource":""});<\/script>
+<p class="cpnote">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p></div>`;
+
 const ADS_CLIENT = "ca-pub-8092073462948926";
 const ADS = `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADS_CLIENT}" crossorigin="anonymous"></script>`;
 
@@ -74,7 +91,7 @@ export function page({ title, desc, body, up = "" }) {
 ${ADS}
 <style>${CSS}</style>
 <header><div class="wrap"><b><a href="${up || "./"}">${SITE}</a></b><span>${TAGLINE}</span></div></header>
-<main><div class="wrap">${body}</div></main>
+<main><div class="wrap">${body}${up ? COUPANG : ""}</div></main>
 <footer><div class="wrap">${SITE} · 이 글은 제품을 직접 써 보고 쓴 후기가 아니라, 고르는 기준을 정리한 글입니다.</div></footer>`;
 }
 
