@@ -103,8 +103,10 @@ ${brief.benchTitles.map(t => "- " + t).join("\n")}
       { encoding: "utf-8", maxBuffer: 32 << 20, timeout: 15 * 60 * 1000 });
   } catch (e) {
     const stderr = Buffer.isBuffer(e.stderr) ? e.stderr.toString("utf-8") : String(e.stderr || "");
-    const detail = stderr.replace(/\s+/g, " ").trim().slice(0, 320);
-    throw new Error(detail ? `원고 생성기 접근 실패: ${detail}` : `원고 생성기 실행 실패: ${e.message}`);
+    const stdout = Buffer.isBuffer(e.stdout) ? e.stdout.toString("utf-8") : String(e.stdout || "");
+    const detail = (stderr || stdout).replace(/\s+/g, " ").trim().slice(0, 320);
+    const error=new Error(detail ? `원고 생성기 실행 실패: ${detail}` : `원고 생성기 종료 코드 ${e.status ?? "없음"} · 신호 ${e.signal || "없음"}`);
+    error.writerFailure=true;throw error;
   }
   const m = out.match(/\{[\s\S]*\}/);
   if (!m) throw new Error("글 형식이 JSON 이 아니다");
@@ -174,7 +176,7 @@ function autoPick(data) {
     ...picks.map(p => p.topic),
     ...drafts.map(d => d.title),
   ]);
-  const runningCats = new Set(picks.filter(p => ["queued", "running"].includes(p.status)).map(p => p.cat));
+  const runningCats = new Set(picks.filter(p => ["queued", "running", "codex_queued"].includes(p.status)).map(p => p.cat));
   const day=new Date(Date.now()+9*3600e3).toISOString().slice(0,10);
   const produced={};
   for(const d of drafts) {
@@ -192,7 +194,36 @@ function autoPick(data) {
   return null;
 }
 
+async function finishDraft(post,brief,pick) {
+    const chk = inspect(post, brief);
+    if (chk.bad.length) throw new Error(`초안 점검 실패: ${chk.bad.join(" · ")}`);
+
+    // 카드 — 소제목에서 제목을 가져온다
+    const slug = brief.topic.replace(/\s+/g, "-").replace(/[^\p{L}\p{N}-]/gu, "").slice(0, 60);
+    const heads = [...post.body.matchAll(/<h2>([\s\S]*?)<\/h2>/g)].map(m => m[1].replace(/<[^>]+>/g, "")).slice(0, 4);
+    makeCards(slug, heads, path.join("drafts", slug));
+
+    const md = post.body.replace(/<h2>/g, "\n## ").replace(/<\/h2>/g, "\n")
+      .replace(/<li>/g, "- ").replace(/<\/li>/g, "\n")
+      .replace(/<[^>]+>/g, "").replace(/\n{3,}/g, "\n\n").trim();
+
+    const d0 = {
+      id: "d" + Date.now().toString(36), title: post.title, slug, status: "review",
+      cat: brief.cat, catName: brief.catName, chars: chk.chars, keywords: brief.kwTotal,
+      bench: brief.benchChars, cards: heads.length, md, desc: post.desc, lede: post.lede,
+      html: post.body, feedback: [], created: new Date().toISOString(), updated: new Date().toISOString(),
+    };
+    // 🔴 올리기 전에 먼저 남긴다. 업로드가 실패해도 글은 살아 있고 다음 실행이 이어받는다.
+    fs.mkdirSync(path.join("drafts", slug), { recursive: true });
+    fs.writeFileSync(path.join("drafts", slug, "draft.json"),
+      JSON.stringify({ ...d0, pickId: pick.id }, null, 1) + "\n");
+    await upload(d0, pick.id);
+    console.log(`끝: ${post.title} · ${chk.chars}자 · 카드 ${heads.length}장`);
+}
+
 async function run() {
+  let activePickId=null;
+  let activeBrief=null;
   fs.mkdirSync(".cache", { recursive: true });
   if (fs.existsSync(LOCK)) {
     const rawPid = fs.readFileSync(LOCK, "utf-8").trim();
@@ -214,6 +245,9 @@ async function run() {
     const healthOnly=process.argv.includes("--health-only");
     if(!healthOnly) await flush();
     let { sha, data } = await read();
+    if(!healthOnly && data.worker?.code==="writer_execution" && Date.parse(data.worker.next_retry_at || "")>Date.now()) {
+      console.log("원고 생성기 실패 원인 확인 중 · 후보 보존");return;
+    }
     const day=new Date(Date.now()+9*3600e3).toISOString().slice(0,10);
     if(!healthOnly && data.today?.date!==day) {
       data.today={date:day,goal:data.today?.goal || 1,done:{}};
@@ -243,8 +277,21 @@ async function run() {
       if (data.worker?.code !== health.code) { data.worker = health; await write(data,sha,"worker: 원고 생성기 인증 장애"); }
       console.error(health.note); process.exitCode = 1; return;
     }
+    // 로그인 토큰이 있어도 조직 정책·구독 상태 때문에 실제 `claude -p`가
+    // 차단될 수 있다. auth status만 보고 ready로 덮어쓰면 대시보드와
+    // 다음 워커 실행이 생성 가능하다고 오판한다. 실패 기록의 재시도
+    // 유예가 남아 있는 동안에는 실행 health도 같은 차단 상태를 보존한다.
+    if (data.worker?.code === "writer_execution" &&
+        Date.parse(data.worker.next_retry_at || "") > Date.now()) {
+      const health = {project:"blog",status:"blocked",code:"writer_execution",
+        note:data.worker.note || "원고 생성기 실행이 차단되어 후보를 보존했습니다",
+        action:data.worker.action || "생성기 정책·구독 상태 확인 필요",
+        next_retry_at:data.worker.next_retry_at, at:new Date().toISOString()};
+      fs.writeFileSync(".cache/worker-health.json", JSON.stringify(health,null,2));
+      console.error(health.note); process.exitCode = 1; return;
+    }
     fs.writeFileSync(".cache/worker-health.json", JSON.stringify({project:"blog",status:"ready",at:new Date().toISOString()}));
-    if(data.worker?.status==="blocked") {
+    if(data.worker?.status==="blocked" && data.worker?.code==="writer_auth") {
       data.worker={project:"blog",status:"ready",note:"원고 생성기 인증 확인됨",at:new Date().toISOString()};
       await write(data,sha,"worker: 원고 생성기 인증 복구");
       ({sha,data}=await read());
@@ -262,50 +309,71 @@ async function run() {
       pick = (data.picks || []).find(p => p.id === pick.id) || pick;
       console.log(`자동 선정: ${pick.topic}`);
     }
+    activePickId=pick.id;
     pick.status = "running"; pick.stage = "market"; pick.updated = new Date().toISOString();
     await write(data, sha, `worker: 가져감 ${pick.topic}`);
     console.log(`가져감: ${pick.topic}`);
 
     await setStage(pick.id, "bench", "상위 글을 재는 중");
     const brief = await makeBrief(pick);
+    activeBrief=brief;
     console.log(`브리프: 키워드 ${brief.kwTotal} · 벤치 ${brief.benchChars}자`);
 
     await setStage(pick.id, "write", `목표 ${brief.target.chars}자`);
     const post = writePost(brief);
-    const chk = inspect(post, brief);
-    if (chk.bad.length) throw new Error(`초안 점검 실패: ${chk.bad.join(" · ")}`);
-
-    // 카드 — 소제목에서 제목을 가져온다
-    const slug = brief.topic.replace(/\s+/g, "-").replace(/[^\p{L}\p{N}-]/gu, "").slice(0, 60);
-    const heads = [...post.body.matchAll(/<h2>([\s\S]*?)<\/h2>/g)].map(m => m[1].replace(/<[^>]+>/g, "")).slice(0, 4);
-    makeCards(slug, heads, path.join("drafts", slug));
-
-    const md = post.body.replace(/<h2>/g, "\n## ").replace(/<\/h2>/g, "\n")
-      .replace(/<li>/g, "- ").replace(/<\/li>/g, "\n")
-      .replace(/<[^>]+>/g, "").replace(/\n{3,}/g, "\n\n").trim();
-
-    const d0 = {
-      id: "d" + Date.now().toString(36), title: post.title, slug, status: "review",
-      cat: brief.cat, catName: brief.catName, chars: chk.chars, keywords: brief.kwTotal,
-      bench: brief.benchChars, cards: heads.length, md, desc: post.desc, lede: post.lede,
-      html: post.body, feedback: [], created: new Date().toISOString(), updated: new Date().toISOString(),
-    };
-    // 🔴 올리기 전에 먼저 남긴다. 업로드가 실패해도 글은 살아 있고 다음 실행이 이어받는다.
-    fs.mkdirSync(path.join("drafts", slug), { recursive: true });
-    fs.writeFileSync(path.join("drafts", slug, "draft.json"),
-      JSON.stringify({ ...d0, pickId: pick.id }, null, 1) + "\n");
-    await upload(d0, pick.id);
-    console.log(`끝: ${post.title} · ${chk.chars}자 · 카드 ${heads.length}장`);
+    await finishDraft(post,brief,pick);
   } catch (e) {
     const msg = String(e.message || e).slice(0, 200);
     console.error(`실패: ${msg}`);
     try {
       const { sha, data } = await read();
-      const p = (data.picks || []).find(x => x.status === "running");
+      const p = (data.picks || []).find(x => x.id===activePickId);
       if (p) { p.status = "failed"; p.note = msg; p.stage = ""; p.updated = new Date().toISOString(); }
+      if(e.writerFailure) {
+        const disabled=/disabled Claude subscription/i.test(msg);
+        if(disabled && p && activeBrief) {
+          fs.mkdirSync(".cache/codex-requests",{recursive:true});
+          fs.writeFileSync(path.join(".cache/codex-requests",p.id+".json"),JSON.stringify({project:"blog",pick:p,brief:activeBrief,status:"queued",created:new Date().toISOString()},null,2));
+          p.status="codex_queued";p.note="Claude 조직 구독 사용 차단 · Codex 대체 원고 제작 요청 대기";
+        }
+        data.worker={project:"blog",status:"blocked",code:"writer_execution",note:msg,action:disabled?"Codex 대체 원고 제작 요청 대기 · 추가 API 비용 없음":"생성기 응답·한도 진단 필요 · 새 후보 보존",at:new Date().toISOString(),next_retry_at:new Date(Date.now()+(disabled?86400000:900000)).toISOString()};
+      }
       await write(data, sha, "worker: 실패");
     } catch {}
     process.exitCode = 1;
   } finally { fs.rmSync(LOCK, { force: true }); }
 }
-run();
+async function queueCodex(topic) {
+  const {sha,data}=await read();
+  if(!/disabled Claude subscription/i.test(data.worker?.note || "")) throw Error("Claude 조직 차단 장애가 확인되지 않았습니다");
+  const pick=(data.picks || []).find(p=>(!topic || p.topic===topic) && p.status==="failed" && /원고 생성기/.test(p.note || ""));
+  if(!pick) throw Error("Codex로 전환할 실패 원고 없음");
+  if(!/^[a-zA-Z0-9_-]+$/.test(pick.id)) throw Error("요청 식별자 오류");
+  const brief=await makeBrief(pick);
+  fs.mkdirSync(".cache/codex-requests",{recursive:true});
+  fs.writeFileSync(path.join(".cache/codex-requests",pick.id+".json"),JSON.stringify({project:"blog",pick,brief,status:"queued",created:new Date().toISOString()},null,2));
+  pick.status="codex_queued";pick.stage="write";pick.note="Claude 조직 사용 차단 · Codex 대체 원고 제작 요청 대기";pick.updated=new Date().toISOString();
+  data.worker.action="Codex 대체 원고 제작 요청 대기 · 추가 API 비용 없음";
+  await write(data,sha,"worker: Codex 대체 제작 요청");
+  console.log("Codex 원고 요청: "+pick.id);
+}
+async function acceptCodex(id) {
+  fs.mkdirSync(".cache",{recursive:true});
+  fs.writeFileSync(LOCK,String(process.pid),{flag:"wx"});
+  try {
+  if(!/^[a-zA-Z0-9_-]+$/.test(id || "")) throw Error("요청 식별자 오류");
+  const request=JSON.parse(fs.readFileSync(path.join(".cache/codex-requests",id+".json"),"utf8"));
+  const post=JSON.parse(fs.readFileSync(path.join(".cache/codex-requests",id+".post.json"),"utf8"));
+  const cur=await read(),pick=(cur.data.picks || []).find(p=>p.id===id && p.status==="codex_queued");
+  if(request.project!=="blog" || request.status!=="queued" || !pick || pick.topic!==request.brief.topic) throw Error("프로젝트·원고 요청 불일치");
+  for(const field of ["title","desc","lede","body"]) if(typeof post[field]!=="string" || !post[field].trim()) throw Error("원고 필드 오류: "+field);
+  await finishDraft(post,request.brief,pick);
+  request.status="done";fs.writeFileSync(path.join(".cache/codex-requests",id+".json"),JSON.stringify(request,null,2));
+  } finally {fs.rmSync(LOCK,{force:true});}
+}
+export {inspect};
+if(process.argv[1] && new URL(import.meta.url).pathname===process.argv[1]) {
+  const mode=process.argv[2];
+  const task=mode==="--queue-codex"?queueCodex(process.argv[3]):mode==="--accept-codex"?acceptCodex(process.argv[3]):run();
+  task.catch(e=>{console.error("블로그 실행 실패: "+e.message);process.exitCode=1;});
+}
