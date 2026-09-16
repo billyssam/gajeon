@@ -134,6 +134,7 @@
 - 2026-09-16 23:15 KST: 최종 검증 완료. 공개 승인 전 검사 `18/18`, 발행 E2E 드라이런 `9/9`, 원고 QA `5/5`, Gmail read-only `connected·3건`, 대시보드 UI `6/6`·일괄 런북·트랙 분리·승인 잠금 PASS. 코드 구문 검사 PASS, 공개 사이트 GA4 태그 2회 확인, 대시보드 응답 체인 `302→307→200` 확인. 미해결 내부 항목 0건.
 - 2026-09-16 23:20 KST: 미해결 항목 7개를 `blog.json.open_items`, `OPEN_ITEMS_20260916.md`, 대시보드 `현재 미해결 7개` 블록에 동일 저장. 운영 브라우저에서 AdSense 심사·Claude 워커 제한·`6/6`·일괄 런북 노출을 직접 확인함. 완료 항목과 외부 대기 항목을 분리 표시.
 - 2026-09-17: Gmail API read-only로 Google AdSense 최신 메일을 직접 확인. 상태는 심사 대기가 아니라 `게시자 콘텐츠가 없는 화면에 Google 게재 광고` 문제 통지. AdSense 사이트 화면에서도 동일 문구를 직접 확인했으며, 심사 대상이 호스트 루트 `billyssam.github.io`임을 확인함. 원격 루트 index.html의 AdSense 스크립트를 제거하고 Pages 재빌드를 요청함. 공개 CDN은 아직 이전 HTML을 반환하고 있어 재검토 요청은 보류.
+- 2026-09-17 추가: GitHub Pages 빌드 상태 `built` 확인. 공개 `https://billyssam.github.io/`에서 `adsbygoogle`·게시자 ID 문자열 `0개`를 확인하고, `/gajeon/` GA4 태그는 2회 유지 확인. 내부 수정은 완료됐으며 AdSense 계정의 체크·검토 요청 제출만 외부 확인 단계로 남김.
 
 ## 2단계 이후
 

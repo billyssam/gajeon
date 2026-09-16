@@ -15,6 +15,6 @@
 - `Google AdSense <adsense-noreply@google.com>`에서 `애드센스를 사용하려면 사이트에서 발견된 문제를 수정해야 합니다.` 메일을 확인했다.
 - AdSense 사이트 화면에서 문제 문구를 직접 확인했다: `게시자 콘텐츠가 없는 화면에 Google 게재 광고`.
 - `billyssam.github.io` 루트 index.html에 남아 있던 AdSense 스크립트를 제거하고 GitHub Pages 재빌드를 요청했다.
-- 공개 CDN은 현재 이전 HTML을 계속 제공하고 있어, Pages 빌드 완료 및 공개 HTML 재확인이 끝나기 전에는 재검토 요청을 누르지 않는다.
+- Pages 빌드 완료 후 공개 루트 HTML에서 AdSense 코드 `0개`를 확인했다. 계정의 `문제를 수정했음을 확인합니다` 체크와 `검토 요청` 제출은 별도 외부 계정 작업으로 남겼다.
 
 대시보드의 `현재 미해결 7개` 블록과 운영 저장소 `blog.json.open_items`에 동일하게 기록했다.
