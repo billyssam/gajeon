@@ -146,6 +146,11 @@ async function upload(d, pickId) {
   cur.data.drafts = (cur.data.drafts || []).filter(x => x.slug !== d.slug).concat([d]);
   const p = (cur.data.picks || []).find(x => x.id === pickId);
   if (p) { p.status = "done"; p.stage = ""; p.note = `${d.chars}자 · 검수 대기`; p.updated = new Date().toISOString(); }
+  if(d.engine==="codex") {
+    cur.data.worker={...(cur.data.worker || {}),status:"fallback_ready",engine:"codex",at:new Date().toISOString(),expected_interval_minutes:30,
+      provider_note:cur.data.worker?.provider_note || cur.data.worker?.note || "",note:"Codex 대체 제작 원고 검수함 전달 완료",
+      action:`${d.title} · ${d.chars}자 검수 대기`,last_review:d.id};
+  }
   await write(cur.data, cur.sha, `worker: 초안 올림 ${d.title}`);
   const f = path.join("drafts", d.slug, "draft.json");
   if (fs.existsSync(f)) fs.renameSync(f, f + ".올림");
@@ -197,7 +202,7 @@ function autoPick(data) {
   return null;
 }
 
-async function finishDraft(post,brief,pick) {
+async function finishDraft(post,brief,pick,engine="claude") {
     const chk = inspect(post, brief);
     if (chk.bad.length) throw new Error(`초안 점검 실패: ${chk.bad.join(" · ")}`);
 
@@ -211,7 +216,7 @@ async function finishDraft(post,brief,pick) {
       .replace(/<[^>]+>/g, "").replace(/\n{3,}/g, "\n\n").trim();
 
     const d0 = {
-      id: "d" + Date.now().toString(36), title: post.title, slug, status: "review",
+      id: "d" + Date.now().toString(36), title: post.title, slug, status: "review", engine,
       cat: brief.cat, catName: brief.catName, chars: chk.chars, keywords: brief.kwTotal,
       bench: brief.benchChars, cards: heads.length, md, desc: post.desc, lede: post.lede,
       html: post.body, feedback: [], created: new Date().toISOString(), updated: new Date().toISOString(),
@@ -286,12 +291,12 @@ async function run() {
     // 유예가 남아 있는 동안에는 실행 health도 같은 차단 상태를 보존한다.
     if (data.worker?.code === "writer_execution" &&
         Date.parse(data.worker.next_retry_at || "") > Date.now()) {
-      const health = {project:"blog",status:"blocked",code:"writer_execution",
+      const health = {project:"blog",status:data.worker.engine==="codex"?data.worker.status:"blocked",engine:data.worker.engine,code:"writer_execution",
         note:data.worker.note || "원고 생성기 실행이 차단되어 후보를 보존했습니다",
         action:data.worker.action || "생성기 정책·구독 상태 확인 필요",
         next_retry_at:data.worker.next_retry_at, at:new Date().toISOString()};
       fs.writeFileSync(".cache/worker-health.json", JSON.stringify(health,null,2));
-      console.error(health.note); process.exitCode = 1; return;
+      console.error(health.note); if(data.worker.engine!=="codex") process.exitCode = 1; return;
     }
     fs.writeFileSync(".cache/worker-health.json", JSON.stringify({project:"blog",status:"ready",at:new Date().toISOString()}));
     if(data.worker?.status==="blocked" && data.worker?.code==="writer_auth") {
@@ -347,18 +352,31 @@ async function run() {
   } finally { fs.rmSync(LOCK, { force: true }); }
 }
 async function queueCodex(topic) {
+  fs.mkdirSync(".cache",{recursive:true});
+  fs.writeFileSync(LOCK,String(process.pid),{flag:"wx"});
+  try {
   const {sha,data}=await read();
-  if(!/disabled Claude subscription/i.test(data.worker?.note || "")) throw Error("Claude 조직 차단 장애가 확인되지 않았습니다");
-  const pick=(data.picks || []).find(p=>(!topic || p.topic===topic) && p.status==="failed" && /원고 생성기/.test(p.note || ""));
-  if(!pick) throw Error("Codex로 전환할 실패 원고 없음");
+  if(!/disabled Claude subscription/i.test(data.worker?.provider_note || data.worker?.note || "")) throw Error("Claude 조직 차단 장애가 확인되지 않았습니다");
+  let pick=(data.picks || []).find(p=>(!topic || p.topic===topic) && p.status==="queued");
+  if(!pick && topic) pick=(data.picks || []).find(p=>p.topic===topic && p.status==="failed" && /원고 생성기/.test(p.note || ""));
+  if(!pick && !topic) {
+    const candidate=autoPick(data);
+    if(candidate) {pick={...candidate,id:"p"+Date.now().toString(36),status:"queued",created:new Date().toISOString()};data.picks=(data.picks || []).concat([pick]);}
+  }
+  if(!pick) {console.log("오늘 목표 내 대체 제작 후보 없음");return;}
+  const day=new Date(Date.now()+9*3600e3).toISOString().slice(0,10);
+  const produced=(data.drafts || []).filter(d=>d.cat===pick.cat && ["review","rework","approved","published"].includes(d.status) && Number.isFinite(Date.parse(d.created)) && new Date(Date.parse(d.created)+9*3600e3).toISOString().slice(0,10)===day).length;
+  if(produced>=Number(data.today?.goal || 1)) throw Error("오늘 카테고리 제작 목표가 검수 원고로 충족됐습니다");
   if(!/^[a-zA-Z0-9_-]+$/.test(pick.id)) throw Error("요청 식별자 오류");
   const brief=await makeBrief(pick);
   fs.mkdirSync(".cache/codex-requests",{recursive:true});
   fs.writeFileSync(path.join(".cache/codex-requests",pick.id+".json"),JSON.stringify({project:"blog",pick,brief,status:"queued",created:new Date().toISOString()},null,2));
   pick.status="codex_queued";pick.stage="write";pick.note="Claude 조직 사용 차단 · Codex 대체 원고 제작 요청 대기";pick.updated=new Date().toISOString();
-  data.worker.action="Codex 대체 원고 제작 요청 대기 · 추가 API 비용 없음";
+  data.worker={...(data.worker || {}),provider_note:data.worker?.provider_note || data.worker?.note || "",status:"fallback_queued",engine:"codex",at:new Date().toISOString(),expected_interval_minutes:30,
+    note:"Codex 대체 원고 제작 요청 대기",action:`${pick.topic} · 대체 원고 제작 대기 · 추가 API 비용 없음`};
   await write(data,sha,"worker: Codex 대체 제작 요청");
   console.log("Codex 원고 요청: "+pick.id);
+  } finally {fs.rmSync(LOCK,{force:true});}
 }
 async function acceptCodex(id) {
   fs.mkdirSync(".cache",{recursive:true});
@@ -370,7 +388,7 @@ async function acceptCodex(id) {
   const cur=await read(),pick=(cur.data.picks || []).find(p=>p.id===id && p.status==="codex_queued");
   if(request.project!=="blog" || request.status!=="queued" || !pick || pick.topic!==request.brief.topic) throw Error("프로젝트·원고 요청 불일치");
   for(const field of ["title","desc","lede","body"]) if(typeof post[field]!=="string" || !post[field].trim()) throw Error("원고 필드 오류: "+field);
-  await finishDraft(post,request.brief,pick);
+  await finishDraft(post,request.brief,pick,"codex");
   request.status="done";fs.writeFileSync(path.join(".cache/codex-requests",id+".json"),JSON.stringify(request,null,2));
   } finally {fs.rmSync(LOCK,{force:true});}
 }
