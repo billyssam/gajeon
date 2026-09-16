@@ -6,6 +6,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
+import { mergeChanges } from "./state-merge.mjs";
+const readBases = new Map();
 import { makeBrief } from "./brief.mjs";
 import { makeCards } from "./cards.mjs";
 
@@ -16,16 +18,21 @@ const token = () => gh("auth", "token").trim();
 
 async function read() {
   const j = JSON.parse(gh("api", `repos/${R}/contents/${F}`));
-  return { sha: j.sha, data: JSON.parse(Buffer.from(j.content, "base64").toString("utf-8")) };
+  const data = JSON.parse(Buffer.from(j.content, "base64").toString("utf-8"));
+  readBases.set(j.sha, structuredClone(data));
+  if (readBases.size > 20) readBases.delete(readBases.keys().next().value);
+  return { sha: j.sha, data };
 }
 // 🔴 2026-09-13: 15분 걸려 쓴 글이 마지막 업로드 한 번에 날아갔다("fetch failed").
 //    네트워크는 가끔 끊긴다. 세 번까지 다시 시도한다.
 async function write(data, sha, message) {
   let last;
+  const base = readBases.get(sha);
+  const intended = structuredClone(data);
   for (let i = 0; i < 3; i++) {
     try {
       const res = await fetch(`https://api.github.com/repos/${R}/contents/${F}`, {
-        method: "PUT",
+        method: "PUT", signal: AbortSignal.timeout(15000),
         headers: { Authorization: `Bearer ${token()}`, Accept: "application/vnd.github+json",
                    "Content-Type": "application/json", "User-Agent": "gajeon-worker" },
         body: JSON.stringify({ message, branch: "main", sha,
@@ -35,6 +42,8 @@ async function write(data, sha, message) {
       last = new Error(`PUT ${res.status} ${(await res.text()).slice(0, 160)}`);
       if (res.status === 409 || res.status === 422) { // 남이 먼저 썼다 — 다시 읽어서 붙인다
         const fresh = await read(); sha = fresh.sha;
+        if (!base) throw new Error("갱신 기준 문서가 없어 충돌을 안전하게 병합할 수 없습니다");
+        data = mergeChanges(base, intended, fresh.data);
       }
     } catch (e) { last = e; }
     await new Promise(r => setTimeout(r, 2000 * (i + 1)));
@@ -87,9 +96,16 @@ ${brief.benchTitles.map(t => "- " + t).join("\n")}
 아래 JSON 만 출력한다. 설명·코드펜스 없이 JSON 하나만.
 {"title":"...","desc":"한 문장","lede":"한 문장","body":"<h2>..</h2><p>..</p> 형태의 HTML"}`;
 
-  const out = execFileSync("/opt/homebrew/bin/claude",
-    ["-p", prompt, "--output-format", "text"],
-    { encoding: "utf-8", maxBuffer: 32 << 20, timeout: 15 * 60 * 1000 });
+  let out;
+  try {
+    out = execFileSync("/opt/homebrew/bin/claude",
+      ["-p", prompt, "--output-format", "text"],
+      { encoding: "utf-8", maxBuffer: 32 << 20, timeout: 15 * 60 * 1000 });
+  } catch (e) {
+    const stderr = Buffer.isBuffer(e.stderr) ? e.stderr.toString("utf-8") : String(e.stderr || "");
+    const detail = stderr.replace(/\s+/g, " ").trim().slice(0, 320);
+    throw new Error(detail ? `원고 생성기 접근 실패: ${detail}` : `원고 생성기 실행 실패: ${e.message}`);
+  }
   const m = out.match(/\{[\s\S]*\}/);
   if (!m) throw new Error("글 형식이 JSON 이 아니다");
   const post = JSON.parse(m[0]);
@@ -144,17 +160,77 @@ async function flush() {
   return n;
 }
 
+// 대표가 매번 주제를 누르지 않아도 된다. 오늘 목표가 비어 있는 카테고리에서
+// 아직 쓰지 않은 후보를 하나씩 골라 큐에 넣는다. 하루 3개(카테고리당 1개)는
+// blog-review.json의 cats/today 설정을 따른다. 검수·승인·발행 게이트는 그대로 둔다.
+function autoPick(data) {
+  const topics = Array.isArray(data.topics) ? data.topics : [];
+  const cats = Array.isArray(data.cats) ? data.cats : [];
+  const today = data.today || { goal: 1, done: {} };
+  const goal = Number(today.goal || 1);
+  const picks = data.picks || [];
+  const drafts = data.drafts || [];
+  const used = new Set([
+    ...picks.map(p => p.topic),
+    ...drafts.map(d => d.title),
+  ]);
+  const runningCats = new Set(picks.filter(p => ["queued", "running"].includes(p.status)).map(p => p.cat));
+  const done = today.done || {};
+  const order = cats.length ? cats : [...new Map(topics.map(t => [t.cat || "", { key: t.cat || "", name: t.cat || "" }])).values()];
+  for (const cat of order) {
+    const key = cat.key || "";
+    if (Number(done[key] || 0) >= goal || runningCats.has(key)) continue;
+    const t = topics.find(x => (x.cat || "") === key && x.topic && !used.has(x.topic));
+    if (t) return { topic: t.topic, cat: key, kind: t.kind || "", auto: true };
+  }
+  return null;
+}
+
 async function run() {
   fs.mkdirSync(".cache", { recursive: true });
-  if (fs.existsSync(LOCK) && Date.now() - fs.statSync(LOCK).mtimeMs < 20 * 60 * 1000) {
-    console.log("이미 도는 중"); return;
+  if (fs.existsSync(LOCK)) {
+    const rawPid = fs.readFileSync(LOCK, "utf-8").trim();
+    const pid = Number(rawPid);
+    let alive = false;
+    if (Number.isInteger(pid) && pid > 1) {
+      try { process.kill(pid, 0); alive = true; } catch {}
+    }
+    if (alive) {
+      console.log(`이미 도는 중 (PID ${pid})`); return;
+    }
+    // 비정상 종료로 남은 잠금은 다음 실행을 막지 않도록 정리한다.
+    fs.rmSync(LOCK, { force: true });
+    console.log("오래된 잠금 정리");
   }
-  fs.writeFileSync(LOCK, String(process.pid));
+  try { fs.writeFileSync(LOCK, String(process.pid), { flag: "wx" }); }
+  catch(e) { if(e.code === "EEXIST") { console.log("다른 실행이 먼저 잠금을 획득했습니다"); return; } throw e; }
   try {
     await flush();
-    const { sha, data } = await read();
-    const pick = (data.picks || []).find(p => p.status === "queued");
-    if (!pick) { console.log("고른 주제 없음"); return; }
+    let { sha, data } = await read();
+    let auth;
+    try { auth = JSON.parse(execFileSync("/opt/homebrew/bin/claude", ["auth", "status"], {encoding:"utf-8",timeout:15000})); }
+    catch(e) {
+      try { auth = JSON.parse(String(e.stdout || "")); } catch { auth = {loggedIn:false}; }
+    }
+    if (!auth.loggedIn && !process.env.ANTHROPIC_API_KEY) {
+      const health = {project:"blog",status:"blocked",code:"writer_auth",note:"원고 생성기 인증 없음 · 새 후보를 소모하지 않고 보존했습니다",action:"인증 복구 필요",at:new Date().toISOString()};
+      fs.writeFileSync(".cache/worker-health.json", JSON.stringify(health,null,2));
+      if (data.worker?.code !== health.code) { data.worker = health; await write(data,sha,"worker: 원고 생성기 인증 장애"); }
+      console.error(health.note); process.exitCode = 1; return;
+    }
+    fs.writeFileSync(".cache/worker-health.json", JSON.stringify({project:"blog",status:"ready",at:new Date().toISOString()}));
+    let pick = (data.picks || []).find(p => p.status === "queued");
+    if (!pick) {
+      const next = autoPick(data);
+      if (!next) { console.log("자동 선정할 후보 없음"); return; }
+      pick = { id: `p${Date.now().toString(36)}`, ...next,
+        status: "queued", stage: "", note: "자동 선정 · 워커 대기", created: new Date().toISOString(), updated: new Date().toISOString() };
+      data.picks = (data.picks || []).concat([pick]).slice(-20);
+      await write(data, sha, `worker: 자동 선정 ${pick.topic}`);
+      ({ sha, data } = await read());
+      pick = (data.picks || []).find(p => p.id === pick.id) || pick;
+      console.log(`자동 선정: ${pick.topic}`);
+    }
     pick.status = "running"; pick.stage = "market"; pick.updated = new Date().toISOString();
     await write(data, sha, `worker: 가져감 ${pick.topic}`);
     console.log(`가져감: ${pick.topic}`);
