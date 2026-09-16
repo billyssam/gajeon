@@ -2,12 +2,19 @@
 
 내부 QA 결함은 0건이다. 아래는 외부 상태·실측·사용자 승인·발행 시점 검증으로 남아 있는 항목이다.
 
-1. Google AdSense 심사 결과
+1. Google AdSense 재검토 — 실제 지적사항은 `게시자 콘텐츠가 없는 화면에 Google 게재 광고`; 호스트 루트 광고 코드는 제거했고 Pages 반영 대기
 2. 쿠팡파트너스 최종 승인
 3. GA4·Search Console 첫 데이터
 4. Google·Naver 실제 색인·노출 수치
 5. Claude 콘텐츠 워커 조직 제한
 6. 사용자 최종 승인 및 실제 발행
 7. 발행 시점 가격·재고·혜택·공식 사양 재확인
+
+## 2026-09-17 메일 확인 추가 기록
+
+- `Google AdSense <adsense-noreply@google.com>`에서 `애드센스를 사용하려면 사이트에서 발견된 문제를 수정해야 합니다.` 메일을 확인했다.
+- AdSense 사이트 화면에서 문제 문구를 직접 확인했다: `게시자 콘텐츠가 없는 화면에 Google 게재 광고`.
+- `billyssam.github.io` 루트 index.html에 남아 있던 AdSense 스크립트를 제거하고 GitHub Pages 재빌드를 요청했다.
+- 공개 CDN은 현재 이전 HTML을 계속 제공하고 있어, Pages 빌드 완료 및 공개 HTML 재확인이 끝나기 전에는 재검토 요청을 누르지 않는다.
 
 대시보드의 `현재 미해결 7개` 블록과 운영 저장소 `blog.json.open_items`에 동일하게 기록했다.
