@@ -285,6 +285,20 @@ async function run() {
       if (data.worker?.code !== health.code) { data.worker = health; await write(data,sha,"worker: 원고 생성기 인증 장애"); }
       console.error(health.note); process.exitCode = 1; return;
     }
+    // Report an alternative only when its completed local request has an actual
+    // matching review draft, or a queued request matches the current ops pick.
+    const reqDir=".cache/codex-requests";
+    if(data.worker?.code==="writer_execution" && fs.existsSync(reqDir)) {
+      const requests=fs.readdirSync(reqDir).filter(f=>/^[a-zA-Z0-9_-]+\.json$/.test(f) && !f.endsWith(".post.json")).flatMap(f=>{try{return [JSON.parse(fs.readFileSync(path.join(reqDir,f),"utf8"))];}catch{return [];}}).filter(r=>r.project==="blog");
+      const pending=requests.filter(r=>r.status==="queued" && (data.picks || []).some(p=>p.id===r.pick?.id && p.status==="codex_queued"));
+      const completed=requests.filter(r=>r.status==="done" && (data.picks || []).some(p=>p.id===r.pick?.id && p.status==="done") && (data.drafts || []).some(d=>d.title && d.status==="review" && d.slug===r.brief?.topic?.replace(/\s+/g,"-").replace(/[^\p{L}\p{N}-]/gu,"").slice(0,60)));
+      if(pending.length || completed.length) {
+        const last=(data.drafts || []).filter(d=>d.status==="review").sort((a,b)=>Date.parse(b.created)-Date.parse(a.created))[0];
+        data.worker={...data.worker,provider_note:data.worker.provider_note || data.worker.note,engine:"codex",status:pending.length?"fallback_queued":"fallback_ready",at:new Date().toISOString(),expected_interval_minutes:30,
+          note:"기존 생성기 조직 차단 · Codex 대체 제작 연결 확인",action:pending.length?`${pending.map(r=>r.brief.topic).join(" · ")} 대체 원고 제작 대기`:`${last?.title || "완성 원고"} 검수 대기`};
+        await write(data,sha,"worker: Codex 제작 상태 확인");({sha,data}=await read());
+      }
+    }
     // 로그인 토큰이 있어도 조직 정책·구독 상태 때문에 실제 `claude -p`가
     // 차단될 수 있다. auth status만 보고 ready로 덮어쓰면 대시보드와
     // 다음 워커 실행이 생성 가능하다고 오판한다. 실패 기록의 재시도
