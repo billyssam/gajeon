@@ -54,7 +54,7 @@ export async function makeBrief(pick) {
   };
 }
 
-if (process.argv[2]) {
+if (process.argv[1] && new URL(import.meta.url).pathname === process.argv[1] && process.argv[2]) {
   const brief = await makeBrief({ topic: process.argv[2], cat: process.argv[3] || "home" });
   console.log(JSON.stringify(brief, null, 1).slice(0, 1800));
 }

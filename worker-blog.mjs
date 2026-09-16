@@ -13,7 +13,7 @@ import { makeCards } from "./cards.mjs";
 
 const R = "billyssam/gonghak-ops", F = "blog-review.json";
 const LOCK = ".cache/worker.lock";
-const gh = (...a) => execFileSync("/opt/homebrew/bin/gh", a, { encoding: "utf-8", maxBuffer: 16 << 20 });
+const gh = (...a) => execFileSync("/opt/homebrew/bin/gh", a, { encoding: "utf-8", maxBuffer: 16 << 20, timeout:30000 });
 const token = () => gh("auth", "token").trim();
 
 async function read() {
@@ -205,7 +205,8 @@ async function run() {
   try { fs.writeFileSync(LOCK, String(process.pid), { flag: "wx" }); }
   catch(e) { if(e.code === "EEXIST") { console.log("다른 실행이 먼저 잠금을 획득했습니다"); return; } throw e; }
   try {
-    await flush();
+    const healthOnly=process.argv.includes("--health-only");
+    if(!healthOnly) await flush();
     let { sha, data } = await read();
     let auth;
     try { auth = JSON.parse(execFileSync("/opt/homebrew/bin/claude", ["auth", "status"], {encoding:"utf-8",timeout:15000})); }
@@ -219,6 +220,12 @@ async function run() {
       console.error(health.note); process.exitCode = 1; return;
     }
     fs.writeFileSync(".cache/worker-health.json", JSON.stringify({project:"blog",status:"ready",at:new Date().toISOString()}));
+    if(data.worker?.status==="blocked") {
+      data.worker={project:"blog",status:"ready",note:"원고 생성기 인증 확인됨",at:new Date().toISOString()};
+      await write(data,sha,"worker: 원고 생성기 인증 복구");
+      ({sha,data}=await read());
+    }
+    if(healthOnly) return;
     let pick = (data.picks || []).find(p => p.status === "queued");
     if (!pick) {
       const next = autoPick(data);
