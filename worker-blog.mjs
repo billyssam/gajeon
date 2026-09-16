@@ -127,7 +127,10 @@ function inspect(post, brief) {
   if (ends.length && polite / ends.length < 0.7) bad.push(`문체가 다르다(존댓말 ${Math.round(polite / ends.length * 100)}%)`);
   // 🔴 수치가 하나도 없으면 "재라" 고만 하고 기준을 안 주는 글이다. 벤치마크는 43~85건이다.
   const nums = (text.match(/\d+\s*(cm|mm|kg|L\b|리터|개월|인용|평)/g) || []).length;
-  if (nums < 8) bad.push(`구체 수치 ${nums}건 (8건 이상)`);
+  // Do not force arbitrary numeric claims into every subject. Dimensions are
+  // necessary for installation/size comparisons; hygiene/material guides need
+  // verified care instructions instead of invented measurement quotas.
+  if (/(설치|몇.*(cm|리터|인용)|문턱|용량)/.test(brief.topic) && nums===0) bad.push("치수·용량을 판단할 확인된 수치가 없습니다");
   if ((post.body.match(/<h2>/g) || []).length < 6) bad.push("소제목 6개 미만");
   if (/추천\s*\d|BEST|베스트\s*\d|순위\s*\d|최저가/i.test(post.title)) bad.push("제목이 못 줄 약속을 한다");
   if (/LG|엘지|삼성|위니아|딤채|쿠쿠|다이슨|샤오미|부가부|스토케|사이벡스|락앤락|해피콜/i.test(text)) bad.push("브랜드가 들어갔다");

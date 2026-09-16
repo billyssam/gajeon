@@ -5,7 +5,7 @@ import fs from "node:fs";
 import { CATS } from "./seeds.mjs";
 
 const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/128.0 Safari/537.36";
-const get = async u => { try { const r = await fetch(u, { headers: { "User-Agent": UA } }); return await r.text(); } catch { return ""; } };
+const get = async u => { const r=await fetch(u,{headers:{"User-Agent":UA},signal:AbortSignal.timeout(20000)});if(!r.ok) throw Error(`브리프 자료 요청 실패 ${r.status}`);return await r.text(); };
 const strip = h => h.replace(/<(script|style|nav|footer|header|aside)[\s\S]*?<\/\1>/g, "")
                     .replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 
@@ -15,7 +15,8 @@ function keywords(topic, seed, cat) {
     || (cat === "home" && x.startsWith("keywords-"))).sort().at(-1);
   if (!f) return [];
   const rows = JSON.parse(fs.readFileSync(`data/${f}`, "utf-8")).rows;
-  return rows.filter(r => r.seed === seed || r.kw.includes(seed)).map(r => r.kw);
+  return rows.filter(r => r.seed === seed || r.kw.includes(seed)).map(r => r.kw)
+    .filter(kw => seed!=="도마" || !/(도마뱀|사육장|개코|도마29|인사동)/.test(kw));
 }
 
 // ── 벤치마킹: 네이버 블로그탭 상위 제목 + 글 한 편 실측
