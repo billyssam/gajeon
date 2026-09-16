@@ -126,7 +126,7 @@ export const ADS_SLOTS = {
 //    승인 뒤에 붙이면 그때부터 0 에서 시작한다. **승인 전부터 쌓여 있어야** 승인 직후
 //    "어느 글이 먹히는지" 를 보고 다음 글을 정할 수 있다. 그게 이 사이트의 목적이다.
 //    측정 ID 한 줄만 채우면 전 쪽에 들어간다. 비어 있으면 아무것도 안 나간다.
-export const GA_ID = "";   // ← analytics.google.com 에서 받은 "G-XXXXXXXXXX"
+export const GA_ID = "G-J7VS3BZ703";   // 블로그&구글 전용 GA4 웹 스트림
 const GA = GA_ID ? `<script async src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"></script>`
   + `<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}`
   + `gtag('js',new Date());gtag('config','${GA_ID}');</script>` : "";
@@ -182,7 +182,7 @@ export function page({ title, desc, body, up = "", ad = false, path = "", crumb 
 <meta property="og:site_name" content="${esc(SITE)}">
 <meta property="og:locale" content="ko_KR">
 <script type="application/ld+json">${JSON.stringify(ld)}</script>
-${ADS}${GA}
+${ad ? ADS : ""}${GA}
 <style>${CSS}</style>
 </head>
 <body>
