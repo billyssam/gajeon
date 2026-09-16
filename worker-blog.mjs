@@ -175,11 +175,17 @@ function autoPick(data) {
     ...drafts.map(d => d.title),
   ]);
   const runningCats = new Set(picks.filter(p => ["queued", "running"].includes(p.status)).map(p => p.cat));
+  const day=new Date(Date.now()+9*3600e3).toISOString().slice(0,10);
+  const produced={};
+  for(const d of drafts) {
+    const stamp=Date.parse(d.created || "");
+    if(Number.isFinite(stamp) && new Date(stamp+9*3600e3).toISOString().slice(0,10)===day && ["review","rework","approved","published"].includes(d.status)) produced[d.cat]=(produced[d.cat] || 0)+1;
+  }
   const done = today.done || {};
   const order = cats.length ? cats : [...new Map(topics.map(t => [t.cat || "", { key: t.cat || "", name: t.cat || "" }])).values()];
   for (const cat of order) {
     const key = cat.key || "";
-    if (Number(done[key] || 0) >= goal || runningCats.has(key)) continue;
+    if (Number(done[key] || 0) >= goal || (produced[key] || 0)>=goal || runningCats.has(key)) continue;
     const t = topics.find(x => (x.cat || "") === key && x.topic && !used.has(x.topic));
     if (t) return { topic: t.topic, cat: key, kind: t.kind || "", auto: true };
   }
@@ -208,6 +214,24 @@ async function run() {
     const healthOnly=process.argv.includes("--health-only");
     if(!healthOnly) await flush();
     let { sha, data } = await read();
+    const day=new Date(Date.now()+9*3600e3).toISOString().slice(0,10);
+    if(!healthOnly && data.today?.date!==day) {
+      data.today={date:day,goal:data.today?.goal || 1,done:{}};
+      await write(data,sha,"worker: 오늘 제작 목표 갱신");({sha,data}=await read());
+    }
+    if(!healthOnly) {
+      let recovered=false;
+      for(const pending of (data.picks || []).filter(p=>p.status==="running")) {
+        const age=Date.now()-Date.parse(pending.updated || pending.created || "");
+        if(!Number.isFinite(age) || age<1200000) continue;
+        const retries=Number(pending.recovery_attempts || 0);
+        pending.status=retries<3?"queued":"failed";
+        pending.stage="";pending.recovery_attempts=retries+1;
+        pending.note=retries<3?"중단된 제작 작업을 자동 복구해 재개 대기":"같은 제작 작업 복구 3회 실패 · 새 해결 경로 필요";
+        pending.updated=new Date().toISOString();recovered=true;
+      }
+      if(recovered) {await write(data,sha,"worker: 중단된 원고 제작 복구");({sha,data}=await read());}
+    }
     let auth;
     try { auth = JSON.parse(execFileSync("/opt/homebrew/bin/claude", ["auth", "status"], {encoding:"utf-8",timeout:15000})); }
     catch(e) {
