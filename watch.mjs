@@ -7,12 +7,13 @@
 //    그런데 콘솔에는 "발행 끝남 · 20건" 이라고 떴다 — 화면이 거짓말을 했다.
 //    그래서 아래 GUARD 를 둔다. 엉뚱한 저장소에서 돌면 일하기 전에 죽는다.
 import { execFileSync } from "node:child_process";
+import { mkdirSync, readFileSync, writeFileSync, unlinkSync } from "node:fs";
 
 const REPO = "billyssam/gonghak-ops";
 const FILE = "blog-queue.json";
 const HERE = new URL(".", import.meta.url).pathname;
 const NODE = "/opt/homebrew/bin/node";
-const gh = (...a) => execFileSync("/opt/homebrew/bin/gh", a, { encoding: "utf-8", maxBuffer: 8 << 20 });
+const gh = (...a) => execFileSync("/opt/homebrew/bin/gh", a, { encoding: "utf-8", maxBuffer: 8 << 20, timeout: 30000 });
 
 // ── GUARD. 내가 어느 저장소 안에 있는지 확인하고 시작한다.
 const MUST_REMOTE = "billyssam/gajeon";
@@ -28,45 +29,75 @@ try {
 }
 
 function read() {
-  try {
-    const j = JSON.parse(gh("api", `repos/${REPO}/contents/${FILE}`));
-    return { sha: j.sha, data: JSON.parse(Buffer.from(j.content, "base64").toString("utf-8")) };
-  } catch { return { sha: null, data: { jobs: [] } }; }
+  const j = JSON.parse(gh("api", `repos/${REPO}/contents/${FILE}`));
+  const data = JSON.parse(Buffer.from(j.content, "base64").toString("utf-8"));
+  if (!j.sha || !Array.isArray(data.jobs)) throw new Error("명령 상태 형식 오류");
+  return { sha: j.sha, data };
 }
 function write(data, sha, msg) {
-  const args = ["api", "-X", "PUT", `repos/${REPO}/contents/${FILE}`, "-f", `message=${msg}`,
-    "-f", "branch=main", "-f", `content=${Buffer.from(JSON.stringify(data, null, 1) + "\n").toString("base64")}`];
-  if (sha) args.push("-f", `sha=${sha}`);
-  gh(...args);
+  gh("api", "-X", "PUT", `repos/${REPO}/contents/${FILE}`, "-f", `message=${msg}`,
+    "-f", "branch=main", "-f", `content=${Buffer.from(JSON.stringify(data, null, 1) + "\n").toString("base64")}`,
+    "-f", `sha=${sha}`);
 }
-
-const { sha, data } = read();
-const job = (data.jobs || []).find(j => j.status === "queued");
-if (!job) { console.log("대기 중인 명령 없음"); process.exit(0); }
-
-console.log(`가져감: ${job.action} (${job.id})`);
-job.status = "claimed"; job.updated = new Date().toISOString();
-write(data, sha, `worker: claim ${job.action}`);
-
-// 실제 실행. 🔴 전부 ~/gajeon 의 스크립트다. 실패는 숨기지 않고 note 에 남긴다.
+// Each retry reads the latest queue and changes only this job. A competing claim wins.
+function transition(id, expected, changes) {
+  for (let attempt=0; attempt<3; attempt++) {
+    const cur=read(), job=cur.data.jobs.find(x=>x.id===id);
+    if (!job || job.status!==expected) return false;
+    Object.assign(job, changes, {updated:new Date().toISOString()});
+    try { write(cur.data,cur.sha,`worker: ${changes.status} ${job.action}`); return true; }
+    catch(e) { if (!/409|conflict/i.test(String(e.stderr||e.message)) || attempt===2) throw e; }
+  }
+  return false;
+}
+const LOCK=HERE+".cache/blog-command.lock";
+mkdirSync(HERE+".cache",{recursive:true});
+function acquire() {
+  try {writeFileSync(LOCK,String(process.pid),{flag:"wx"});return true;}
+  catch(e) {
+    if(e.code!=="EEXIST") throw e;
+    const pid=Number(readFileSync(LOCK,"utf8"));
+    if(!Number.isInteger(pid)||pid<=0) throw new Error("명령 잠금 형식 오류");
+    try {process.kill(pid,0);return false;} catch(ex) {if(ex.code!=="ESRCH") throw ex;}
+    unlinkSync(LOCK);
+    try {writeFileSync(LOCK,String(process.pid),{flag:"wx"});return true;}
+    catch(ex) {if(ex.code==="EEXIST") return false;throw ex;}
+  }
+}
+// Paths are passed as arguments with cwd, never interpolated into shell command text.
 const CMD = {
-  measure: ["/bin/bash", ["-lc", `cd ${HERE} && ${NODE} keywords.mjs`]],
-  publish: ["/bin/bash", ["-lc", `cd ${HERE} && bash deploy-pages.sh`]],
-  verify:  ["/bin/bash", ["-lc", `cd ${HERE} && ${NODE} build.mjs && ${NODE} check.mjs`]],
+  measure: [NODE,["keywords.mjs"]],
+  publish: ["/bin/bash",["deploy-pages.sh"]],
+  verify: [NODE,["build.mjs"]],
 };
-let ok = true, note = "";
+let locked=false;
 try {
-  const [bin, args] = CMD[job.action];
-  const out = execFileSync(bin, args, { encoding: "utf-8", maxBuffer: 16 << 20, timeout: 50 * 60 * 1000 });
-  note = out.trim().split("\n").slice(-1)[0].slice(0, 160);
-} catch (e) {
-  ok = false;
-  note = String(e.stdout || e.message || e).trim().split("\n").slice(-1)[0].slice(0, 160);
-}
-
-const cur = read();
-const j2 = (cur.data.jobs || []).find(x => x.id === job.id);
-if (j2) { j2.status = ok ? "done" : "failed"; j2.note = note; j2.updated = new Date().toISOString(); }
-write(cur.data, cur.sha, `worker: ${ok ? "done" : "failed"} ${job.action}`);
-console.log(`${ok ? "끝" : "실패"}: ${note}`);
-process.exit(ok ? 0 : 1);
+  locked=acquire();
+  if(!locked) {console.log("다른 명령 실행 중");process.exitCode=0;}
+  else {
+    const initial=read();
+    // A dead process may have performed an external operation before dying. Do not duplicate it.
+    for(const j of initial.data.jobs.filter(x=>x.status==="claimed")) {
+      transition(j.id,"claimed",{status:"failed",note:"이전 명령 실행기가 종료됐습니다. 실제 결과 확인 전 중복 실행을 차단했습니다.",code:"execution_interrupted"});
+    }
+    const job=read().data.jobs.find(j=>j.status==="queued");
+    if(!job) console.log("대기 중인 명령 없음");
+    else if(!CMD[job.action]) {
+      transition(job.id,"queued",{status:"failed",note:"지원하지 않는 블로그 명령",code:"invalid_action"});process.exitCode=1;
+    } else if(transition(job.id,"queued",{status:"claimed",owner:process.pid,started:new Date().toISOString()})) {
+      let ok=true,note="";
+      try {
+        const [bin,args]=CMD[job.action];
+        const opts={cwd:HERE,encoding:"utf8",maxBuffer:16<<20,timeout:50*60*1000};
+        let out=execFileSync(bin,args,opts);
+        if(job.action==="verify") out+=execFileSync(NODE,["check.mjs"],opts);
+        note=out.trim().split("\n").slice(-1)[0].slice(0,160);
+      } catch(e) {
+        ok=false;note=String(e.stderr||e.stdout||e.message||e).trim().split("\n").slice(-1)[0].slice(0,160);
+      }
+      if(!transition(job.id,"claimed",{status:ok?"done":"failed",note})) throw new Error("실행 결과 저장 전 명령 상태가 변경됐습니다");
+      console.log(`${ok?"끝":"실패"}: ${note}`);process.exitCode=ok?0:1;
+    }
+  }
+} catch(e) {console.error(`명령 실행기 장애: ${e.message}`);process.exitCode=1;}
+finally {if(locked) unlinkSync(LOCK);}
